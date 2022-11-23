@@ -14,6 +14,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void tabletEvent(QTabletEvent *event) override;
+
 private:
     Ui::MainWindow *ui;
 };
