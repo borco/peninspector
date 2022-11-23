@@ -82,5 +82,11 @@ void MainWindow::tabletEvent(QTabletEvent *event)
     ui->deviceIdLabel->setText(QString::number(device->systemId()));
     ui->deviceTypeLabel->setText(inputDeviceTypeName(device->type()));
     ui->pointerTypeLabel->setText(pointerTypeName(event->pointerType()));
+    ui->presureLabel->setText(QString::number(event->pressure()));
+    ui->rotationLabel->setText(QString::number(event->rotation()));
+    ui->tangentialPressureLabel->setText(QString::number(event->tangentialPressure()));
+    ui->xTiltLabel->setText(QString::number(event->xTilt()));
+    ui->yTiltLabel->setText(QString::number(event->yTilt()));
+    ui->zLabel->setText(QString::number(event->z()));
 }
 
