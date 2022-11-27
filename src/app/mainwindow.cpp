@@ -73,7 +73,16 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    m_docks << ui->penInfoDock;
+
+    for (const auto& dock: m_docks) {
+        auto action = dock->toggleViewAction();
+        ui->menuDocks->addAction(action);
+    }
+
     connect(ui->canvas, &Canvas::tabletEventReceived, this, &MainWindow::onCanvasTabletEventReceived);
+
     loadSettings();
 }
 

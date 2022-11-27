@@ -23,5 +23,6 @@ private:
 
     void onCanvasTabletEventReceived(QTabletEvent *event);
 
+    QList<QDockWidget*> m_docks;
     Ui::MainWindow *ui;
 };
