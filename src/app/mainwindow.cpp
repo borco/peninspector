@@ -2,9 +2,13 @@
 #include "./ui_mainwindow.h"
 
 #include <QInputDevice>
+#include <QSettings>
 #include <QTabletEvent>
 
 namespace {
+
+static const char* GeometryKey {"MainWindow/geometry"};
+static const char* StateKey {"MainWindow/state"};
 
 const QString& inputDeviceTypeName(QInputDevice::DeviceType deviceType)
 {
@@ -70,11 +74,29 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     connect(ui->canvas, &Canvas::tabletEventReceived, this, &MainWindow::onCanvasTabletEventReceived);
+    loadSettings();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::loadSettings()
+{
+    qDebug() << "Loading main window settings...";
+    QSettings settings;
+
+    restoreGeometry(settings.value(GeometryKey).toByteArray());
+    restoreState(settings.value(StateKey).toByteArray());
+}
+
+void MainWindow::saveSettings() const
+{
+    qDebug() << "Saving main window settings...";
+    QSettings settings;
+    settings.setValue(GeometryKey, saveGeometry());
+    settings.setValue(StateKey, saveState());
 }
 
 void MainWindow::onCanvasTabletEventReceived(QTabletEvent *event)
@@ -89,4 +111,10 @@ void MainWindow::onCanvasTabletEventReceived(QTabletEvent *event)
     ui->xTiltLabel->setText(QString::number(event->xTilt()));
     ui->yTiltLabel->setText(QString::number(event->yTilt()));
     ui->zLabel->setText(QString::number(event->z()));
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    saveSettings();
+    qDebug() << "Closing main window...";
 }

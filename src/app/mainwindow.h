@@ -14,7 +14,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 private:
+    void loadSettings();
+    void saveSettings() const;
+
     void onCanvasTabletEventReceived(QTabletEvent *event);
 
     Ui::MainWindow *ui;
