@@ -69,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    connect(ui->canvas, &Canvas::tabletEventReceived, this, &MainWindow::onCanvasTabletEventReceived);
 }
 
 MainWindow::~MainWindow()
@@ -76,7 +77,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::tabletEvent(QTabletEvent *event)
+void MainWindow::onCanvasTabletEventReceived(QTabletEvent *event)
 {
     auto device = event->device();
     ui->deviceIdLabel->setText(QString::number(device->systemId()));
@@ -89,4 +90,3 @@ void MainWindow::tabletEvent(QTabletEvent *event)
     ui->yTiltLabel->setText(QString::number(event->yTilt()));
     ui->zLabel->setText(QString::number(event->z()));
 }
-

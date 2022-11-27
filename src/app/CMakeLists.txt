@@ -1,8 +1,10 @@
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+    canvas.cpp
+    canvas.h
+    main.cpp
+    mainwindow.cpp
+    mainwindow.h
+    mainwindow.ui
 )
 
 # The MACOSX_BUNDLE_ICON_FILE variable is added to the Info.plist

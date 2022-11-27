@@ -14,8 +14,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void tabletEvent(QTabletEvent *event) override;
-
 private:
+    void onCanvasTabletEventReceived(QTabletEvent *event);
+
     Ui::MainWindow *ui;
 };
