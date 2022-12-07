@@ -1,5 +1,7 @@
 #include "mainwindow.h"
+
 #include "canvas.h"
+#include "penconfigquickdockwidget.h"
 #include "peninfoquickdockwidget.h"
 #include "pressurehistogram.h"
 
@@ -25,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     menuBar()->addMenu(windows_menu);
 
     m_docks << new PenInfoQuickDockWidget(pen_info, this);
+    m_docks << new PenConfigQuickDockWidget(this);
     m_docks << new PressureHistogram(pen_info, this);
 
     for (const auto& dock: m_docks) {

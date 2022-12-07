@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>qml/PenInfo.qml</file>
         <file>qml/PressureHistogram.qml</file>
+        <file>qml/PenConfig.qml</file>
     </qresource>
 </RCC>

@@ -5,6 +5,10 @@ set(PROJECT_SOURCES
     main.cpp
     mainwindow.cpp
     mainwindow.h
+    penconfig.cpp
+    penconfig.h
+    penconfigquickdockwidget.cpp
+    penconfigquickdockwidget.h
     peninfo.cpp
     peninfo.h
     peninfoquickdockwidget.cpp
