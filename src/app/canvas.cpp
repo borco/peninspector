@@ -58,8 +58,10 @@ void Canvas::tabletEvent(QTabletEvent *event)
 {
     m_penInfo->setFromEvent(event);
 
-    drawPoint(event->position(), event->pressure(), event->xTilt(), event->yTilt());
-    repaint();
+    if (m_penInfo->pressure() > 0) {
+        drawPoint(event->position(), event->pressure(), event->xTilt(), event->yTilt());
+        repaint();
+    }
 }
 
 void Canvas::drawPoint(QPointF point, qreal pressure, qreal xTilt, qreal yTilt)
