@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "canvas.h"
 #include "peninfoquickdockwidget.h"
+#include "pressurehistogram.h"
 
 #include <QInputDevice>
 #include <QMenu>
@@ -17,12 +18,14 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     auto canvas = new Canvas(this);
+    auto pen_info = canvas->penInfo();
     setCentralWidget(canvas);
 
     auto windows_menu = new QMenu(tr("Docks"), this);
     menuBar()->addMenu(windows_menu);
 
-    m_docks << new PenInfoQuickDockWidget(canvas->penInfo(), this);
+    m_docks << new PenInfoQuickDockWidget(pen_info, this);
+    m_docks << new PressureHistogram(pen_info, this);
 
     for (const auto& dock: m_docks) {
         dock->configure();

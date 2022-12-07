@@ -9,6 +9,8 @@ set(PROJECT_SOURCES
     peninfo.h
     peninfoquickdockwidget.cpp
     peninfoquickdockwidget.h
+    pressurehistogram.cpp
+    pressurehistogram.h
     quickdockwidget.cpp
     quickdockwidget.h
 )
