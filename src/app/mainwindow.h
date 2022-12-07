@@ -2,9 +2,7 @@
 
 #include <QMainWindow>
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
+class QuickDockWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -21,8 +19,5 @@ private:
     void loadSettings();
     void saveSettings() const;
 
-    void onCanvasTabletEventReceived(QTabletEvent *event);
-
-    QList<QDockWidget*> m_docks;
-    Ui::MainWindow *ui;
+    QList<QuickDockWidget*> m_docks;
 };

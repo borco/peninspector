@@ -1,10 +1,16 @@
 set(PROJECT_SOURCES
+    ../resources/app.qrc
     canvas.cpp
     canvas.h
     main.cpp
     mainwindow.cpp
     mainwindow.h
-    mainwindow.ui
+    peninfo.cpp
+    peninfo.h
+    peninfoquickdockwidget.cpp
+    peninfoquickdockwidget.h
+    quickdockwidget.cpp
+    quickdockwidget.h
 )
 
 # The MACOSX_BUNDLE_ICON_FILE variable is added to the Info.plist
@@ -27,7 +33,10 @@ qt_add_executable(PenDoctor
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 
-target_link_libraries(PenDoctor PRIVATE Qt6::Widgets)
+target_link_libraries(PenDoctor PRIVATE
+    Qt6::QuickWidgets
+    Qt6::Widgets
+)
 
 set_target_properties(PenDoctor PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
