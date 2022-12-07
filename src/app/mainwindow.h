@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 
+class PenConfigModel;
 class QuickDockWidget;
 
 class MainWindow : public QMainWindow
@@ -19,5 +20,6 @@ private:
     void loadSettings();
     void saveSettings() const;
 
+    PenConfigModel* m_configs {nullptr};
     QList<QuickDockWidget*> m_docks;
 };

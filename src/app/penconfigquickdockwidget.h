@@ -2,9 +2,11 @@
 
 #include "quickdockwidget.h"
 
+class PenConfigModel;
+
 class PenConfigQuickDockWidget : public QuickDockWidget
 {
 public:
-    explicit PenConfigQuickDockWidget(QWidget* parent = nullptr);
+    explicit PenConfigQuickDockWidget(PenConfigModel* penConfigModel, QWidget* parent = nullptr);
 };
 

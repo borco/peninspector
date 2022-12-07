@@ -7,6 +7,8 @@ set(PROJECT_SOURCES
     mainwindow.h
     penconfig.cpp
     penconfig.h
+    penconfigmodel.cpp
+    penconfigmodel.h
     penconfigquickdockwidget.cpp
     penconfigquickdockwidget.h
     peninfo.cpp

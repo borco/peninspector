@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include "canvas.h"
+#include "penconfigmodel.h"
 #include "penconfigquickdockwidget.h"
 #include "peninfoquickdockwidget.h"
 #include "pressurehistogram.h"
@@ -18,7 +19,10 @@ static const char* StateKey {"MainWindow/state"};
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
+    , m_configs(new PenConfigModel(this))
 {
+    m_configs->configure();
+
     auto canvas = new Canvas(this);
     auto pen_info = canvas->penInfo();
     setCentralWidget(canvas);
@@ -27,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     menuBar()->addMenu(windows_menu);
 
     m_docks << new PenInfoQuickDockWidget(pen_info, this);
-    m_docks << new PenConfigQuickDockWidget(this);
+    m_docks << new PenConfigQuickDockWidget(m_configs, this);
     m_docks << new PressureHistogram(pen_info, this);
 
     for (const auto& dock: m_docks) {
@@ -45,6 +49,8 @@ MainWindow::~MainWindow()
     for (const auto& dock: m_docks) {
         delete dock;
     }
+
+    delete m_configs;
 }
 
 void MainWindow::loadSettings()
