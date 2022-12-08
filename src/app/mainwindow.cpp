@@ -21,8 +21,6 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , m_configs(new PenConfigModel(this))
 {
-    m_configs->configure();
-
     auto canvas = new Canvas(this);
     auto pen_info = canvas->penInfo();
     setCentralWidget(canvas);
@@ -64,6 +62,8 @@ void MainWindow::loadSettings()
     for (const auto& dock: m_docks) {
         dock->loadSettings();
     }
+
+    m_configs->loadSettings();
 }
 
 void MainWindow::saveSettings() const
@@ -76,6 +76,8 @@ void MainWindow::saveSettings() const
     for (const auto& dock: m_docks) {
         dock->saveSettings();
     }
+
+    m_configs->saveSettings();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

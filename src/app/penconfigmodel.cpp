@@ -12,22 +12,6 @@ PenConfigModel::~PenConfigModel()
     qDeleteAll(m_configs.begin(), m_configs.end());
 }
 
-void PenConfigModel::configure()
-{
-    beginResetModel();
-
-    auto conf = new PenConfig(this);
-    conf->setName("XPPen - Deco LW");
-    conf->setPressureLevels(8192);
-    conf->setTilt(60);
-    conf->setResolution(5080);
-    conf->setWorkWidth(10);
-    conf->setWorkHeight(6);
-    m_configs << conf;
-
-    endResetModel();
-}
-
 int PenConfigModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
@@ -99,6 +83,25 @@ PenConfig *PenConfigModel::config(int index) const
     return nullptr;
 }
 
+void PenConfigModel::loadSettings()
+{
+    beginResetModel();
+
+    auto conf = new PenConfig(this);
+    conf->setName("XPPen - Deco LW");
+    conf->setPressureLevels(8192);
+    conf->setTilt(60);
+    conf->setResolution(5080);
+    conf->setWorkWidth(10);
+    conf->setWorkHeight(6);
+    m_configs << conf;
+
+    endResetModel();
+}
+
+void PenConfigModel::saveSettings()
+{
+}
 
 QHash<int, QByteArray> PenConfigModel::roleNames() const
 {

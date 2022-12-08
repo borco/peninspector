@@ -19,8 +19,6 @@ public:
     explicit PenConfigModel(QObject *parent = nullptr);
     ~PenConfigModel();
 
-    void configure();
-
     int size() const { return m_configs.size(); }
 
     QHash<int, QByteArray> roleNames() const override;
@@ -35,6 +33,9 @@ public:
     Q_INVOKABLE void addConfig();
     Q_INVOKABLE void removeConfig(int index);
     Q_INVOKABLE PenConfig* config(int index) const;
+
+    void loadSettings();
+    void saveSettings();
 
 signals:
     void sizeChanged();
