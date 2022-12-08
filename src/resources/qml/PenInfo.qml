@@ -15,6 +15,11 @@ Pane {
         Layout.fillWidth: true
     }
 
+    component RealValueLabel: ValueLabel {
+        property real value: 0
+        text: value ? value.toFixed(4) : "0"
+    }
+
     component HorizontalLine: Rectangle {
         color: control.palette.dark
         height: 1
@@ -36,29 +41,42 @@ Pane {
         ValueLabel { text: penInfo.pointerTypeName }
 
         DescriptionLabel { text: qsTr("Pressure:") }
-        ValueLabel { text: penInfo.pressure }
+        RealValueLabel { value: penInfo.pressure }
 
         DescriptionLabel { text: qsTr("Rotation:") }
-        ValueLabel { text: penInfo.rotation }
+        RealValueLabel { value: penInfo.rotation }
 
         DescriptionLabel { text: qsTr("Tangential Pressure:") }
-        ValueLabel { text: penInfo.tangentialPressure }
+        RealValueLabel { value: penInfo.tangentialPressure }
 
         DescriptionLabel { text: qsTr("X Tilt:") }
-        ValueLabel { text: penInfo.xTilt }
+        RealValueLabel { value: penInfo.xTilt }
 
         DescriptionLabel { text: qsTr("Y Tilt:") }
-        ValueLabel { text: penInfo.yTilt }
+        RealValueLabel { value: penInfo.yTilt }
 
         DescriptionLabel { text: qsTr("Z:") }
-        ValueLabel { text: penInfo.z }
+        RealValueLabel { value: penInfo.z }
 
         HorizontalLine { GridLayout.columnSpan: 2 }
 
         DescriptionLabel { text: qsTr("Tilt Angle:") }
-        ValueLabel { text: penInfo.tiltAngle }
+        RealValueLabel { value: penInfo.tiltAngle }
 
         DescriptionLabel { text: qsTr("Tilt Rotation:") }
-        ValueLabel { text: penInfo.tiltRotation }
+        RealValueLabel { value: penInfo.tiltRotation }
+
+        PenTiltView {
+            tiltRotation: penInfo.tiltRotation
+            tiltAngle: penInfo.tiltAngle
+
+            GridLayout.columnSpan: 2
+
+            Layout.fillWidth: true
+            Layout.maximumWidth: 200
+            Layout.maximumHeight: 200
+            Layout.alignment: Qt.AlignCenter
+            Layout.preferredHeight: width
+        }
     }
 }
