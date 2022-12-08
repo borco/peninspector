@@ -2,6 +2,15 @@
 
 #include "penconfig.h"
 
+#include <QSettings>
+
+namespace {
+namespace {
+static const char* DefaultSettingsArrayKey {"ConfigModel"};
+static const char* ConfigKey {"config"};
+}
+}
+
 PenConfigModel::PenConfigModel(QObject *parent)
     : QAbstractListModel(parent)
 {
@@ -64,7 +73,7 @@ bool PenConfigModel::removeRows(int row, int count, const QModelIndex &parent)
     return true;
 }
 
-void PenConfigModel::addConfig()
+void PenConfigModel::appendConfig()
 {
     insertRows(m_configs.size(), 1);
 }
@@ -85,22 +94,47 @@ PenConfig *PenConfigModel::config(int index) const
 
 void PenConfigModel::loadSettings()
 {
+    QSettings settings;
+
     beginResetModel();
 
-    auto conf = new PenConfig(this);
-    conf->setName("XPPen - Deco LW");
-    conf->setPressureLevels(8192);
-    conf->setTilt(60);
-    conf->setResolution(5080);
-    conf->setWorkWidth(10);
-    conf->setWorkHeight(6);
-    m_configs << conf;
+    qDeleteAll(m_configs);
+    m_configs.clear();
+
+    int size = settings.beginReadArray(DefaultSettingsArrayKey);
+    for (int i = 0; i < size; ++i) {
+        settings.setArrayIndex(i);
+        auto conf = new PenConfig(settings.value(ConfigKey).value<PenConfig>());
+        conf->setParent(this);
+        qDebug() << "appending:" << conf->name();
+        m_configs << conf;
+    }
+    settings.endArray();
+
+    // add some default values if nothing loaded from the settings file
+    if (m_configs.size() == 0) {
+        auto conf = new PenConfig(this);
+        conf->setName("XPPen - Deco LW");
+        conf->setPressureLevels(8192);
+        conf->setTilt(60);
+        conf->setResolution(5080);
+        conf->setWorkWidth(10);
+        conf->setWorkHeight(6);
+        m_configs << conf;
+    }
 
     endResetModel();
 }
 
 void PenConfigModel::saveSettings()
 {
+    QSettings settings;
+    settings.beginWriteArray(DefaultSettingsArrayKey);
+    for (int i = 0; i < m_configs.size(); ++i) {
+        settings.setArrayIndex(i);
+        settings.setValue(ConfigKey, QVariant::fromValue(*(m_configs[i])));
+    }
+    settings.endArray();
 }
 
 QHash<int, QByteArray> PenConfigModel::roleNames() const

@@ -15,6 +15,7 @@ class PenConfig : public QObject
 
 public:
     explicit PenConfig(QObject *parent = nullptr);
+    PenConfig(const PenConfig& other);
 
     QString name() const { return m_name; }
     void setName(const QString &newName);
@@ -51,3 +52,7 @@ private:
     qreal m_workHeight {0.0}; // inch
 };
 
+QDataStream &operator<<(QDataStream &out, const PenConfig &data);
+QDataStream &operator>>(QDataStream &in, PenConfig &data);
+
+Q_DECLARE_METATYPE(PenConfig)

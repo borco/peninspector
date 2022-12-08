@@ -1,8 +1,50 @@
 #include "penconfig.h"
 
+namespace {
+template <typename T> T getValue(QDataStream& in) {
+    T value;
+    in >> value;
+    return value;
+}
+}
+
 PenConfig::PenConfig(QObject *parent)
     : QObject{parent}
 {
+}
+
+PenConfig::PenConfig(const PenConfig &other)
+{
+    m_name = other.m_name;
+    m_pressureLevels = other.m_pressureLevels;
+    m_tilt = other.m_tilt;
+    m_resolution = other.m_resolution;
+    m_workWidth = other.m_workWidth;
+    m_workHeight = other.m_workHeight;
+}
+
+QDataStream &operator<<(QDataStream &out, const PenConfig &data)
+{
+    out << data.name()
+        << data.pressureLevels()
+        << data.tilt()
+        << data.resolution()
+        << data.workWidth()
+        << data.workHeight()
+           ;
+    return out;
+}
+
+QDataStream &operator>>(QDataStream &in, PenConfig &data)
+{
+    data.setName(getValue<QString>(in));
+    data.setPressureLevels(getValue<int>(in));
+    data.setTilt(getValue<qreal>(in));
+    data.setResolution(getValue<int>(in));
+    data.setWorkWidth(getValue<qreal>(in));
+    data.setWorkHeight(getValue<qreal>(in));
+
+    return in;
 }
 
 void PenConfig::setName(const QString &newName)

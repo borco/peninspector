@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "penconfig.h"
 
 #include <QApplication>
 #include <QSettings>
@@ -8,6 +9,8 @@ int main(int argc, char *argv[])
     QGuiApplication::setOrganizationName("Ioan Calin");
     QGuiApplication::setOrganizationDomain("com.gitlab.iborco");
     QGuiApplication::setApplicationName("pendoctor");
+
+    qRegisterMetaType<PenConfig>("PenConfig");
 
     QSettings::setDefaultFormat(QSettings::IniFormat);
     qDebug() << "Settings file:" << QSettings().fileName();

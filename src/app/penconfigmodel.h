@@ -30,7 +30,7 @@ public:
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
-    Q_INVOKABLE void addConfig();
+    Q_INVOKABLE void appendConfig();
     Q_INVOKABLE void removeConfig(int index);
     Q_INVOKABLE PenConfig* config(int index) const;
 

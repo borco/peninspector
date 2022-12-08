@@ -22,10 +22,10 @@ Pane {
             Layout.fillWidth: true
 
             Button {
-                text: qsTr("Add")
+                text: qsTr("Append")
                 Layout.fillWidth: true
                 onClicked: {
-                    configModel.addConfig()
+                    configModel.appendConfig()
                     configView.currentIndex = configModel.size - 1
                 }
             }
@@ -52,7 +52,7 @@ Pane {
             Layout.preferredHeight: contentHeight
             keyNavigationEnabled: true
             delegate: ItemDelegate {
-                text: name
+                text: config.name
                 width: ListView.view.width
                 highlighted: ListView.isCurrentItem
                 onClicked: ListView.view.currentIndex = index
