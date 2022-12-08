@@ -20,6 +20,9 @@ class PenInfo : public QObject
     Q_PROPERTY(qreal yTilt READ yTilt WRITE setYTilt NOTIFY yTiltChanged)
     Q_PROPERTY(qreal z READ z WRITE setZ NOTIFY zChanged)
 
+    Q_PROPERTY(qreal tiltAngle READ tiltAngle WRITE setTiltAngle NOTIFY tiltAngleChanged)
+    Q_PROPERTY(qreal tiltRotation READ tiltRotation WRITE setTiltRotation NOTIFY tiltRotationChanged)
+
 public:
     explicit PenInfo(QObject *parent = nullptr);
 
@@ -56,6 +59,9 @@ public:
     qreal z() const { return m_z; }
     void setZ(qreal newZ);
 
+    qreal tiltAngle() const { return m_tiltAngle; }
+    qreal tiltRotation() const { return m_tiltRotation; }
+
 signals:
     void deviceIdChanged();
     void deviceTypeChanged();
@@ -67,7 +73,13 @@ signals:
     void yTiltChanged();
     void zChanged();
 
+    void tiltAngleChanged();
+    void tiltRotationChanged();
+
 private:
+    void updateTilt();
+    void setTiltAngle(qreal newTiltAngle);
+    void setTiltRotation(qreal newTiltRotation);
 
     qint64 m_deviceId {0L};
     int m_deviceType {0};
@@ -80,5 +92,8 @@ private:
     qreal m_yTilt {0.0};
     qreal m_z {0.0};
     QString m_deviceTypeName;
+
+    qreal m_tiltAngle {0.0};
+    qreal m_tiltRotation {0.0};
 };
 

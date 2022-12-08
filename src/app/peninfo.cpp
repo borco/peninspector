@@ -3,6 +3,8 @@
 #include <QPointingDevice>
 #include <QTabletEvent>
 
+#include <numbers>
+
 namespace {
 const QString& deviceTypeName(int deviceType)
 {
@@ -136,6 +138,7 @@ void PenInfo::setXTilt(qreal newXTilt)
     if (qFuzzyCompare(m_xTilt, newXTilt))
         return;
     m_xTilt = newXTilt;
+    updateTilt();
     emit xTiltChanged();
 }
 
@@ -144,6 +147,7 @@ void PenInfo::setYTilt(qreal newYTilt)
     if (qFuzzyCompare(m_yTilt, newYTilt))
         return;
     m_yTilt = newYTilt;
+    updateTilt();
     emit yTiltChanged();
 }
 
@@ -153,4 +157,32 @@ void PenInfo::setZ(qreal newZ)
         return;
     m_z = newZ;
     emit zChanged();
+}
+
+void PenInfo::updateTilt()
+{
+    const qreal pi = std::numbers::pi_v<qreal>;
+    qreal xtilt_tan = tan(m_xTilt * pi / 180);
+    qreal ytilt_tan = tan(m_yTilt * pi / 180);
+    qreal angle_rad = atan(sqrt(xtilt_tan * xtilt_tan + ytilt_tan * ytilt_tan));
+    qreal rotation_rad = atan2(xtilt_tan, ytilt_tan);
+
+    setTiltAngle(angle_rad * 180 / pi);
+    setTiltRotation(rotation_rad * 180 / pi + 180);
+}
+
+void PenInfo::setTiltAngle(qreal newTiltAngle)
+{
+    if (qFuzzyCompare(m_tiltAngle, newTiltAngle))
+        return;
+    m_tiltAngle = newTiltAngle;
+    emit tiltAngleChanged();
+}
+
+void PenInfo::setTiltRotation(qreal newTiltRotation)
+{
+    if (qFuzzyCompare(m_tiltRotation, newTiltRotation))
+        return;
+    m_tiltRotation = newTiltRotation;
+    emit tiltRotationChanged();
 }

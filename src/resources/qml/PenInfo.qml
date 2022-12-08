@@ -15,6 +15,12 @@ Pane {
         Layout.fillWidth: true
     }
 
+    component HorizontalLine: Rectangle {
+        color: control.palette.dark
+        height: 1
+        Layout.fillWidth: true
+    }
+
     GridLayout {
         width: parent.width
 
@@ -46,5 +52,13 @@ Pane {
 
         DescriptionLabel { text: qsTr("Z:") }
         ValueLabel { text: penInfo.z }
+
+        HorizontalLine { GridLayout.columnSpan: 2 }
+
+        DescriptionLabel { text: qsTr("Tilt Angle:") }
+        ValueLabel { text: penInfo.tiltAngle }
+
+        DescriptionLabel { text: qsTr("Tilt Rotation:") }
+        ValueLabel { text: penInfo.tiltRotation }
     }
 }
