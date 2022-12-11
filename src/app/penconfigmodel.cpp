@@ -106,7 +106,7 @@ void PenConfigModel::loadSettings()
         settings.setArrayIndex(i);
         auto conf = new PenConfig(settings.value(ConfigKey).value<PenConfig>());
         conf->setParent(this);
-        qDebug() << "appending:" << conf->name();
+        qDebug() << "Appending:" << conf->name();
         m_configs << conf;
     }
     settings.endArray();
