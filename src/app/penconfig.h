@@ -35,6 +35,9 @@ public:
     qreal workHeight() const { return m_workHeight; }
     void setWorkHeight(qreal newWorkHeight);
 
+    const PenConfig &operator =(const PenConfig& other);
+    bool operator==(const PenConfig& other);
+
 signals:
     void nameChanged();
     void pressureLevelsChanged();
@@ -44,7 +47,7 @@ signals:
     void workHeightChanged();
 
 private:
-    QString m_name;
+    QString m_name {"Pen"};
     int m_pressureLevels {0};
     qreal m_tilt {0.0}; // degrees
     int m_resolution {0}; // LPI

@@ -15,12 +15,26 @@ PenConfig::PenConfig(QObject *parent)
 
 PenConfig::PenConfig(const PenConfig &other)
 {
-    m_name = other.m_name;
-    m_pressureLevels = other.m_pressureLevels;
-    m_tilt = other.m_tilt;
-    m_resolution = other.m_resolution;
-    m_workWidth = other.m_workWidth;
-    m_workHeight = other.m_workHeight;
+    *this = other;
+}
+
+const PenConfig &PenConfig::operator=(const PenConfig &other)
+{
+    if (&other != this) {
+        m_name = other.m_name;
+        m_pressureLevels = other.m_pressureLevels;
+        m_tilt = other.m_tilt;
+        m_resolution = other.m_resolution;
+        m_workWidth = other.m_workWidth;
+        m_workHeight = other.m_workHeight;
+    }
+
+    return *this;
+}
+
+bool PenConfig::operator==(const PenConfig &other)
+{
+    return false;
 }
 
 QDataStream &operator<<(QDataStream &out, const PenConfig &data)
