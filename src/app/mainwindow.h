@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 
+class PenConfig;
 class PenConfigModel;
 class QuickDockWidget;
 
@@ -22,11 +23,14 @@ protected:
 private:
     void loadSettings();
     void saveSettings() const;
-    void updatePenMenu();
+    void updateConfigsMenu();
+    void updateConfig(const PenConfig *config);
 
-    PenConfigModel* m_configs {nullptr};
     QList<QuickDockWidget*> m_docks;
+    PenConfigModel* m_configs {nullptr};
 
-    QActionGroup* m_penActionsGroup {nullptr};
-    QToolButton* m_penToolButton {nullptr};
+    int m_configIndex {-1};
+    PenConfig* m_config {nullptr};
+    QActionGroup* m_configActionsGroup {nullptr};
+    QToolButton* m_configToolButton {nullptr};
 };

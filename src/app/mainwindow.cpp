@@ -17,13 +17,18 @@
 #include <QToolButton>
 
 namespace {
-static const char* GeometryKey {"MainWindow/geometry"};
-static const char* StateKey {"MainWindow/state"};
+static const char* SettingsGroupKey { "MainWindow" };
+static const char* GeometryKey {"geometry"};
+static const char* StateKey {"state"};
+static const char* ConfigKey {"penConfig"};
+static const char* ConfigIndexKey {"penConfigIndex"};
+static const char* NoConfigText {"<pen not set>"};
 }
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , m_configs(new PenConfigModel(this))
+    , m_config(new PenConfig(this))
 {
     auto canvas = new Canvas(this);
     auto pen_info = canvas->penInfo();
@@ -51,17 +56,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     tool_bar->addSeparator();
 
-    m_penActionsGroup = new QActionGroup(this);
-    m_penToolButton = new QToolButton(this);
-    m_penToolButton->setText("pen");
-    m_penToolButton->setPopupMode(QToolButton::InstantPopup);
-    tool_bar->addWidget(m_penToolButton);
+    m_configActionsGroup = new QActionGroup(this);
+    m_configToolButton = new QToolButton(this);
+    m_configToolButton->setText(NoConfigText);
+    m_configToolButton->setPopupMode(QToolButton::InstantPopup);
+    tool_bar->addWidget(m_configToolButton);
 
     loadSettings();
 
-    connect(m_configs, &PenConfigModel::sizeChanged, this, &MainWindow::updatePenMenu);
-
-    updatePenMenu();
+    connect(m_configs, &PenConfigModel::sizeChanged, this, &MainWindow::updateConfigsMenu);
+    updateConfigsMenu();
 }
 
 MainWindow::~MainWindow()
@@ -77,9 +81,13 @@ void MainWindow::loadSettings()
 {
     qDebug() << "Loading main window settings...";
     QSettings settings;
-
+    settings.beginGroup(SettingsGroupKey);
     restoreGeometry(settings.value(GeometryKey).toByteArray());
     restoreState(settings.value(StateKey).toByteArray());
+    *m_config = settings.value(ConfigKey).value<PenConfig>();
+    m_configIndex = settings.value(ConfigIndexKey, -1).toInt();
+    m_configToolButton->setText(m_configIndex >= 0 ? m_config->name() : NoConfigText);
+    settings.endGroup();
 
     for (const auto& dock: m_docks) {
         dock->loadSettings();
@@ -92,8 +100,12 @@ void MainWindow::saveSettings() const
 {
     qDebug() << "Saving main window settings...";
     QSettings settings;
+    settings.beginGroup(SettingsGroupKey);
     settings.setValue(GeometryKey, saveGeometry());
     settings.setValue(StateKey, saveState());
+    settings.setValue(ConfigKey, QVariant::fromValue(*(m_config)));
+    settings.setValue(ConfigIndexKey, m_configIndex);
+    settings.endGroup();
 
     for (const auto& dock: m_docks) {
         dock->saveSettings();
@@ -102,11 +114,11 @@ void MainWindow::saveSettings() const
     m_configs->saveSettings();
 }
 
-void MainWindow::updatePenMenu()
+void MainWindow::updateConfigsMenu()
 {
-    if (m_penToolButton->menu()) {
-        qDeleteAll(m_penToolButton->menu()->actions());
-        delete m_penToolButton->menu();
+    if (m_configToolButton->menu()) {
+        qDeleteAll(m_configToolButton->menu()->actions());
+        delete m_configToolButton->menu();
     }
 
     auto menu = new QMenu(this);
@@ -114,14 +126,57 @@ void MainWindow::updatePenMenu()
     for (int i = 0; i < m_configs->size(); ++i) {
         auto config = m_configs->config(i);
         auto action = new QAction(this);
-        connect(config, &PenConfig::nameChanged, action, [config, action]() { action->setText(config->name()); });
+        action->setData(i);
         action->setCheckable(true);
         action->setText(config->name());
-        m_penActionsGroup->addAction(action);
+
+        if (i == m_configIndex) {
+            action->setChecked(true);
+        }
+
+        connect(config, &PenConfig::nameChanged, action, [this, config, action]() {
+            action->setText(config->name());
+            if (m_configIndex == action->data().toInt()) {
+                updateConfig(config);
+            }
+        });
+
+        connect(config, &PenConfig::pressureLevelsChanged, action, [this, config, action]() {
+            if (m_configIndex == action->data().toInt()) {
+                updateConfig(config);
+            }
+        });
+
+        connect(config, &PenConfig::tiltChanged, action, [this, config, action]() {
+            if (m_configIndex == action->data().toInt()) {
+                updateConfig(config);
+            }
+        });
+
+        connect(action, &QAction::triggered, action, [this, config, i]() {
+            m_configToolButton->setText(config->name());
+            m_configIndex = i;
+            updateConfig(config);
+        });
+
+        m_configActionsGroup->addAction(action);
         menu->addAction(action);
     }
 
-    m_penToolButton->setMenu(menu);
+    m_configToolButton->setMenu(menu);
+
+    qDebug() << "Updated configs menu";
+}
+
+void MainWindow::updateConfig(const PenConfig* config)
+{
+    if (m_config == config)
+        return;
+
+    *m_config = *config;
+    m_configToolButton->setText(m_config->name());
+
+    qDebug() << "Updated current config";
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
