@@ -62,6 +62,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_configToolButton->setPopupMode(QToolButton::InstantPopup);
     tool_bar->addWidget(m_configToolButton);
 
+    tool_bar->addAction(canvas->actions()[0]);
+
     loadSettings();
 
     connect(m_configs, &PenConfigModel::sizeChanged, this, &MainWindow::updateConfigsMenu);
