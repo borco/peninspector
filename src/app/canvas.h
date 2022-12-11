@@ -31,10 +31,10 @@ protected:
     void tabletEvent(QTabletEvent *event) override;
 
 private:
-    void drawPoint(QPointF point, qreal pressure, qreal xTilt, qreal yTilt);
+    void paintAt(QPointF point);
     void updatePenInfo(QTabletEvent *event) const;
 
     QImage m_image;
-    int m_brushSize {10};
+    int m_brushSize {30};
     PenInfo* m_penInfo {nullptr};
 };

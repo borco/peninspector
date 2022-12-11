@@ -1,6 +1,7 @@
 #include "canvas.h"
 #include "peninfo.h"
 
+#include <QBrush>
 #include <QPainter>
 #include <QResizeEvent>
 
@@ -18,6 +19,14 @@ Canvas::Canvas(QWidget *parent)
 {
     setTabletTracking(true);
     clearCanvas(m_image, width(), height());
+
+    // add an action to clear the canvas
+    auto action = new QAction(this);
+    action->setText(tr("Clear"));
+    action->setShortcutContext(Qt::ApplicationShortcut);
+    action->setShortcut(QKeySequence::Delete);
+    connect(action, &QAction::triggered, this, &Canvas::clear);
+    addAction(action);
 }
 
 Canvas::~Canvas()
@@ -59,15 +68,25 @@ void Canvas::tabletEvent(QTabletEvent *event)
     m_penInfo->setFromEvent(event);
 
     if (m_penInfo->pressure() > 0) {
-        drawPoint(event->position(), event->pressure(), event->xTilt(), event->yTilt());
+        paintAt(event->position());
         repaint();
     }
 }
 
-void Canvas::drawPoint(QPointF point, qreal pressure, qreal xTilt, qreal yTilt)
+void Canvas::paintAt(QPointF point)
 {
-//    QRgb value = m_drawColor.rgb();
-    m_image.setPixel(point.x(), point.y(), 0);
+    QPainter painter(&m_image);
+    painter.setBrush(QBrush(Qt::black));
+
+    painter.translate(point);
+    // tilt rotation is counter-clockwise and 0 is at the top
+    // painter rotation is clockwise and 0 is at right
+    painter.rotate(-90 - m_penInfo->tiltRotation());
+    qreal size = m_brushSize * m_penInfo->pressure();
+    // make the brush longer on the tilt direction
+    qreal rx = size * (1 + 3 * m_penInfo->tiltAngle() / 60);
+    qreal ry = size;
+    painter.drawEllipse(QRect(-rx/2, -ry/2, rx, ry));
 }
 
 void Canvas::setBrushSize(int newBrushSize)
