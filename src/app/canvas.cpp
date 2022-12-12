@@ -22,7 +22,7 @@ Canvas::Canvas(QWidget *parent)
 
     // add an action to clear the canvas
     auto action = new QAction(this);
-    action->setText(tr("Clear"));
+    action->setText(tr("Clear Canvas"));
     action->setShortcutContext(Qt::ApplicationShortcut);
     action->setShortcut(QKeySequence::Delete);
     connect(action, &QAction::triggered, this, &Canvas::clear);
