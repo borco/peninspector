@@ -3,17 +3,17 @@
 #include "dockwidget.h"
 
 class PenConfig;
-class PenInspector;
+class PenInfo;
+class PressureHistogramModel;
 
 class QAbstractAxis;
 class QChart;
 class QSplitter;
-class QStringListModel;
 
 class PressureHistogramDockWidget : public DockWidget
 {
 public:
-    explicit PressureHistogramDockWidget(PenConfig *penConfig, PenInspector* penInspector, QWidget* parent = nullptr);
+    explicit PressureHistogramDockWidget(PenConfig *penConfig, PenInfo *penInfo, QWidget* parent = nullptr);
     ~PressureHistogramDockWidget() override;
 
     void saveSettings() const override;
@@ -23,13 +23,13 @@ private:
     void updateHistogram();
 
     PenConfig* m_config {nullptr};
-    PenInspector* m_inspector {nullptr};
+    PenInfo* m_info {nullptr};
 
     QChart* m_chart {nullptr};
     QAbstractAxis* m_xAxis {nullptr};
     QAbstractAxis* m_yAxis {nullptr};
 
-    QStringListModel* m_valuesModel {nullptr};
+    PressureHistogramModel* m_pressureHistogramModel {nullptr};
     QSplitter* m_splitter {nullptr};
 };
 
