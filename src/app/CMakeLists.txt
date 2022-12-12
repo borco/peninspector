@@ -19,8 +19,6 @@ set(PROJECT_SOURCES
     peninfo.h
     peninfoquickdockwidget.cpp
     peninfoquickdockwidget.h
-    peninspector.cpp
-    peninspector.h
     pressurehistogramdockwidget.cpp
     pressurehistogramdockwidget.h
     pressurehistogrammodel.cpp

@@ -42,6 +42,4 @@ private:
     PenConfig* m_config {nullptr};
     QActionGroup* m_configActionsGroup {nullptr};
     QToolButton* m_configToolButton {nullptr};
-
-    PenInspector* m_penInspector;
 };

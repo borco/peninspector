@@ -5,7 +5,6 @@
 #include "penconfigmodel.h"
 #include "penconfigquickdockwidget.h"
 #include "peninfoquickdockwidget.h"
-#include "peninspector.h"
 #include "pressurehistogramdockwidget.h"
 
 #include <QActionGroup>
@@ -36,8 +35,6 @@ MainWindow::MainWindow(QWidget *parent)
     auto canvas = new Canvas(this);
     auto pen_info = canvas->penInfo();
     setCentralWidget(canvas);
-
-    m_penInspector = new PenInspector(canvas->penInfo(), this);
 
     auto windows_menu = new QMenu(tr("Docks"), this);
     menuBar()->addMenu(windows_menu);
