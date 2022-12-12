@@ -2,6 +2,8 @@
 
 Simple Qt application to inspect data provided by graphics tablet styluses.
 
+Tested on macOS, but it should work on Windows and Linux, too.
+
 ![main window](docs/main_window.png)
 
 ## Usage
