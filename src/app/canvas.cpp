@@ -1,3 +1,5 @@
+// Copyright 2022 by Ioan Calin Borcoman <iborco@gmail.com>
+
 #include "canvas.h"
 #include "peninfo.h"
 

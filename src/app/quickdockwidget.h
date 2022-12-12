@@ -1,3 +1,5 @@
+// Copyright 2022 by Ioan Calin Borcoman <iborco@gmail.com>
+
 #pragma once
 
 #include "dockwidget.h"
@@ -17,4 +19,3 @@ protected:
     QString m_qmlSource;
     QQuickWidget *m_quickWidget{nullptr};
 };
-

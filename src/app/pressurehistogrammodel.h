@@ -1,3 +1,5 @@
+// Copyright 2022 by Ioan Calin Borcoman <iborco@gmail.com>
+
 #pragma once
 
 #include <QAbstractTableModel>
@@ -35,4 +37,3 @@ public:
 private:
     QList<Pressure> m_pressures;
 };
-

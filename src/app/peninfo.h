@@ -1,3 +1,5 @@
+// Copyright 2022 by Ioan Calin Borcoman <iborco@gmail.com>
+
 #pragma once
 
 #include <QObject>
@@ -96,4 +98,3 @@ private:
     qreal m_tiltAngle {0.0};
     qreal m_tiltRotation {0.0};
 };
-

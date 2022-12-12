@@ -1,3 +1,5 @@
+// Copyright 2022 by Ioan Calin Borcoman <iborco@gmail.com>
+
 #pragma once
 
 #include "quickdockwidget.h"
@@ -10,4 +12,3 @@ class PenInfoQuickDockWidget : public QuickDockWidget
 public:
     explicit PenInfoQuickDockWidget(PenInfo* penInfo, QWidget* parent = nullptr);
 };
-

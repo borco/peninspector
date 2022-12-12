@@ -1,3 +1,5 @@
+// Copyright 2022 by Ioan Calin Borcoman <iborco@gmail.com>
+
 #pragma once
 
 #include "dockwidget.h"
@@ -35,4 +37,3 @@ private:
     PressureHistogramModel* m_pressureHistogramModel {nullptr};
     QSplitter* m_splitter {nullptr};
 };
-
