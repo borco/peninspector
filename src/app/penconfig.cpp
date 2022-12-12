@@ -15,18 +15,23 @@ PenConfig::PenConfig(QObject *parent)
 
 PenConfig::PenConfig(const PenConfig &other)
 {
-    *this = other;
+    m_name = other.m_name;
+    m_pressureLevels = other.m_pressureLevels;
+    m_tilt = other.m_tilt;
+    m_resolution = other.m_resolution;
+    m_workWidth = other.m_workWidth;
+    m_workHeight = other.m_workHeight;
 }
 
 const PenConfig &PenConfig::operator=(const PenConfig &other)
 {
     if (&other != this) {
-        m_name = other.m_name;
-        m_pressureLevels = other.m_pressureLevels;
-        m_tilt = other.m_tilt;
-        m_resolution = other.m_resolution;
-        m_workWidth = other.m_workWidth;
-        m_workHeight = other.m_workHeight;
+        setName(other.m_name);
+        setPressureLevels(other.m_pressureLevels);
+        setTilt(other.m_tilt);
+        setResolution(other.m_resolution);
+        setWorkWidth(other.m_workWidth);
+        setWorkHeight(other.m_workHeight);
     }
 
     return *this;
