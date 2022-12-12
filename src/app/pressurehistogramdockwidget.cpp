@@ -93,7 +93,11 @@ void PressureHistogramDockWidget::updateHistogram()
             max_count = qMax(max_count, data[i]);
         }
 
-        series->setName(tr("Pressure (%1 values)").arg(m_pressureHistogramModel->size()));
+        series->setName(tr("<b>%1</b> <br> <i>pressure levels:</i> %2 <br> <i>detected levels:</i> %3")
+                        .arg(m_config->name())
+                        .arg(levels)
+                        .arg(m_pressureHistogramModel->size())
+                        );
 
         m_chart->removeAllSeries();
         m_chart->addSeries(series);
