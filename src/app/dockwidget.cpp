@@ -33,6 +33,16 @@ void DockWidget::configure()
 {
 }
 
+void DockWidget::addToolBarAction(QAction *action)
+{
+    m_toolBar->insertAction(m_spacerAction, action);
+}
+
+QAction *DockWidget::addToolBarSeparator()
+{
+    return m_toolBar->insertSeparator(m_spacerAction);
+}
+
 void DockWidget::setupToolBar()
 {
     auto tool_bar = m_toolBar;

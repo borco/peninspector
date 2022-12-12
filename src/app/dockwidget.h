@@ -16,14 +16,13 @@ public:
     virtual void configure();
 
 protected:
-    void addToolbarAction(QAction* action);
-    QAction *addToolbarWidget(QWidget* widget);
-    QAction *addToolbarSeparator();
-
-    QToolBar* m_toolBar{nullptr};
-    QAction* m_spacerAction{nullptr};
+    void addToolBarAction(QAction* action);
+    QAction *addToolBarSeparator();
 
 private:
     void setupToolBar();
     void setupToggleAction();
+
+    QToolBar* m_toolBar{nullptr};
+    QAction* m_spacerAction{nullptr};
 };
