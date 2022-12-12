@@ -4,6 +4,8 @@ set(PROJECT_SOURCES
     ../resources/app.qrc
     canvas.cpp
     canvas.h
+    dockwidget.cpp
+    dockwidget.h
     main.cpp
     mainwindow.cpp
     mainwindow.h
@@ -17,8 +19,10 @@ set(PROJECT_SOURCES
     peninfo.h
     peninfoquickdockwidget.cpp
     peninfoquickdockwidget.h
-    pressurehistogram.cpp
-    pressurehistogram.h
+    peninspector.cpp
+    peninspector.h
+    pressurehistogramdockwidget.cpp
+    pressurehistogramdockwidget.h
     quickdockwidget.cpp
     quickdockwidget.h
 )
@@ -44,6 +48,7 @@ qt_add_executable(${APP_NAME}
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 
 target_link_libraries(${APP_NAME} PRIVATE
+    Qt6::Charts
     Qt6::QuickWidgets
     Qt6::Widgets
 )

@@ -4,7 +4,8 @@
 
 class PenConfig;
 class PenConfigModel;
-class QuickDockWidget;
+class PenInspector;
+class DockWidget;
 
 class QActionGroup;
 class QToolButton;
@@ -34,11 +35,13 @@ private:
     void updateConfigsMenu();
     void updateConfigToolButtonText();
 
-    QList<QuickDockWidget*> m_docks;
+    QList<DockWidget*> m_docks;
     PenConfigModel* m_configs {nullptr};
 
     int m_configIndex {-1};
     PenConfig* m_config {nullptr};
     QActionGroup* m_configActionsGroup {nullptr};
     QToolButton* m_configToolButton {nullptr};
+
+    PenInspector* m_penInspector;
 };

@@ -1,19 +1,16 @@
 #pragma once
 
-#include <QDockWidget>
+#include "dockwidget.h"
 
 class QQuickWidget;
 
-class QuickDockWidget : public QDockWidget
+class QuickDockWidget : public DockWidget
 {
     Q_OBJECT
 public:
     explicit QuickDockWidget(const QString& objectName, const QString& title, const QString& qmlSource, QWidget *parent = nullptr);
 
-    void configure();
-
-    virtual void saveSettings() const;
-    virtual void loadSettings();
+    void configure() override;
 
 protected:
     QMap<QString, QObject*> m_qmlProperties;
