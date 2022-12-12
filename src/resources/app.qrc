@@ -3,5 +3,7 @@
         <file>qml/PenInfo.qml</file>
         <file>qml/PenConfig.qml</file>
         <file>qml/PenTiltView.qml</file>
+        <file>icons/dock-float.svg</file>
+        <file>icons/dock-close.svg</file>
     </qresource>
 </RCC>
