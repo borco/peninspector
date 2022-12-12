@@ -8,6 +8,7 @@ class PressureHistogramModel;
 
 class QAbstractAxis;
 class QChart;
+class QChartView;
 class QSplitter;
 
 class PressureHistogramDockWidget : public DockWidget
@@ -21,11 +22,13 @@ public:
 
 private:
     void updateHistogram();
+    void copyChartToClipboard();
 
     PenConfig* m_config {nullptr};
     PenInfo* m_info {nullptr};
 
     QChart* m_chart {nullptr};
+    QChartView* m_chartView {nullptr};
     QAbstractAxis* m_xAxis {nullptr};
     QAbstractAxis* m_yAxis {nullptr};
 

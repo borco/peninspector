@@ -6,7 +6,10 @@
 
 #include <QChart>
 #include <QChartView>
+#include <QClipboard>
+#include <QGuiApplication>
 #include <QLineSeries>
+#include <QMimeData>
 #include <QSettings>
 #include <QSplitter>
 #include <QTableView>
@@ -29,6 +32,13 @@ PressureHistogramDockWidget::PressureHistogramDockWidget(PenConfig* penConfig, P
     , m_yAxis(new QValueAxis())
     , m_pressureHistogramModel(new PressureHistogramModel(this))
 {
+    addToolBarSeparator();
+
+    auto action = new QAction(this);
+    action->setText(tr("Copy Chart"));
+    connect(action, &QAction::triggered, this, &PressureHistogramDockWidget::copyChartToClipboard);
+    addToolBarAction(action);
+
     m_chart->addAxis(m_xAxis, Qt::AlignBottom);
     m_chart->addAxis(m_yAxis, Qt::AlignLeft);
 
@@ -39,9 +49,10 @@ PressureHistogramDockWidget::PressureHistogramDockWidget(PenConfig* penConfig, P
     });
 
     m_splitter = new QSplitter(this);
-    auto char_view = new QChartView(m_chart, this);
-    char_view->setRenderHint(QPainter::Antialiasing);
-    m_splitter->addWidget(char_view);
+
+    m_chartView = new QChartView(m_chart, this);
+    m_chartView->setRenderHint(QPainter::Antialiasing);
+    m_splitter->addWidget(m_chartView);
 
     auto table_view = new QTableView(this);
     table_view->setModel(m_pressureHistogramModel);
@@ -88,6 +99,14 @@ void PressureHistogramDockWidget::updateHistogram()
 
         m_yAxis->setRange(0, max_count);
         series->attachAxis(m_yAxis);
+}
+
+void PressureHistogramDockWidget::copyChartToClipboard()
+{
+    auto clipboard = QGuiApplication::clipboard();
+    auto data = new QMimeData;
+    data->setImageData(m_chartView->grab().toImage());
+    clipboard->setMimeData(data);
 }
 
 void PressureHistogramDockWidget::saveSettings() const
