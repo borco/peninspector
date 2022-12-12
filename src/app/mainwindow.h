@@ -13,9 +13,17 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    Q_PROPERTY(int configIndex READ configIndex WRITE setConfigIndex NOTIFY configIndexChanged)
+
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    int configIndex() const { return m_configIndex; }
+    void setConfigIndex(int newConfigIndex);
+
+signals:
+    void configIndexChanged();
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -24,7 +32,7 @@ private:
     void loadSettings();
     void saveSettings() const;
     void updateConfigsMenu();
-    void updateConfig(const PenConfig *config);
+    void updateConfigToolButtonText();
 
     QList<QuickDockWidget*> m_docks;
     PenConfigModel* m_configs {nullptr};
