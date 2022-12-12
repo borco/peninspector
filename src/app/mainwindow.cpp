@@ -30,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent)
     , m_configs(new PenConfigModel(this))
     , m_config(new PenConfig(this))
 {
+    setWindowTitle(tr("PenInspector"));
+
     auto canvas = new Canvas(this);
     auto pen_info = canvas->penInfo();
     setCentralWidget(canvas);
