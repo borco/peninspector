@@ -1,3 +1,5 @@
+set(APP_NAME PenInspector)
+
 set(PROJECT_SOURCES
     ../resources/app.qrc
     canvas.cpp
@@ -31,22 +33,22 @@ set(APP_ICON_MACOS "${CMAKE_SOURCE_DIR}/src/resources/icons/${MACOSX_BUNDLE_ICON
 set_source_files_properties(${APP_ICON_MACOS} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources")
 
-qt_add_executable(PenDoctor
+qt_add_executable(${APP_NAME}
     MANUAL_FINALIZATION
     ${PROJECT_SOURCES}
     ${APP_ICON_MACOS}
 )
 # Define target properties for Android with Qt 6 as:
-#    set_property(TARGET PenDoctor APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+#    set_property(TARGET ${APP_NAME} APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 
-target_link_libraries(PenDoctor PRIVATE
+target_link_libraries(${APP_NAME} PRIVATE
     Qt6::QuickWidgets
     Qt6::Widgets
 )
 
-set_target_properties(PenDoctor PROPERTIES
+set_target_properties(${APP_NAME} PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -54,8 +56,8 @@ set_target_properties(PenDoctor PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-install(TARGETS PenDoctor
+install(TARGETS ${APP_NAME}
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
-qt_finalize_executable(PenDoctor)
+qt_finalize_executable(${APP_NAME})

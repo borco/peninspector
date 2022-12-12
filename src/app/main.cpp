@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication::setOrganizationName("Ioan Calin");
     QGuiApplication::setOrganizationDomain("com.gitlab.iborco");
-    QGuiApplication::setApplicationName("pendoctor");
+    QGuiApplication::setApplicationName("peninspector");
 
     qRegisterMetaType<PenConfig>("PenConfig");
 
