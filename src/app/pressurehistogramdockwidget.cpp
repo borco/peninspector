@@ -7,6 +7,7 @@
 #include <QChart>
 #include <QChartView>
 #include <QClipboard>
+#include <QGraphicsLayout>
 #include <QGuiApplication>
 #include <QLineSeries>
 #include <QMimeData>
@@ -39,6 +40,8 @@ PressureHistogramDockWidget::PressureHistogramDockWidget(PenConfig* penConfig, P
     connect(action, &QAction::triggered, this, &PressureHistogramDockWidget::copyChartToClipboard);
     addToolBarAction(action);
 
+    m_chart->layout()->setContentsMargins(0, 0, 0, 0);
+    m_chart->setBackgroundRoundness(0);
     m_chart->addAxis(m_xAxis, Qt::AlignBottom);
     m_chart->addAxis(m_yAxis, Qt::AlignLeft);
 
@@ -55,6 +58,7 @@ PressureHistogramDockWidget::PressureHistogramDockWidget(PenConfig* penConfig, P
     m_splitter->addWidget(m_chartView);
 
     auto table_view = new QTableView(this);
+    table_view->setFrameShape(QFrame::NoFrame);
     table_view->setModel(m_pressureHistogramModel);
     m_splitter->addWidget(table_view);
 
