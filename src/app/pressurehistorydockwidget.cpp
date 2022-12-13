@@ -25,8 +25,11 @@
 
 #include <QChart>
 #include <QChartView>
+#include <QClipboard>
 #include <QGraphicsLayout>
+#include <QGuiApplication>
 #include <QLineSeries>
+#include <QMimeData>
 #include <QPointF>
 #include <QSettings>
 #include <QSplitter>
@@ -155,6 +158,10 @@ void PressureHistoryDockWidget::updateTitle()
 
 void PressureHistoryDockWidget::copyChartToClipboard()
 {
+    auto clipboard = QGuiApplication::clipboard();
+    auto data = new QMimeData;
+    data->setImageData(m_chartView->grab().toImage());
+    clipboard->setMimeData(data);
 }
 
 //void PressureHistoryDockWidget::saveChartToDisk()
