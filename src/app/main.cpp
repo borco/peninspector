@@ -23,8 +23,34 @@
 #include <QApplication>
 #include <QSettings>
 
+void message_handler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QByteArray localMsg = msg.toLocal8Bit();
+    const char *file = context.file ? context.file : "";
+
+    switch (type) {
+    case QtDebugMsg:
+        qDebug().noquote().nospace() << localMsg.constData() << " (file://" << file << ":" << context.line << ")";
+        break;
+    case QtInfoMsg:
+        qInfo().noquote().nospace() << localMsg.constData() << " (file://" << file << ":" << context.line << ")";
+        break;
+    case QtWarningMsg:
+        qWarning().noquote().nospace() << localMsg.constData() << " (file://" << file << ":" << context.line << ")";
+        break;
+    case QtCriticalMsg:
+        qCritical().noquote().nospace() << localMsg.constData() << " (file://" << file << ":" << context.line << ")";
+        break;
+    case QtFatalMsg:
+        qFatal("%s (file://%s:%i)", localMsg.constData(), file, context.line);
+        break;
+    }
+}
+
 int main(int argc, char *argv[])
 {
+    qInstallMessageHandler(message_handler);
+
     QGuiApplication::setOrganizationName("Ioan Calin");
     QGuiApplication::setOrganizationDomain("com.gitlab.iborco");
     QGuiApplication::setApplicationName("peninspector");
