@@ -83,6 +83,11 @@ void PressureHistoryDockWidget::setupToolBarActions()
     addToolBarSeparator();
 
     auto action = new QAction(this);
+    action->setText(tr("Clear"));
+    connect(action, &QAction::triggered, m_pressureHistoryModel, &PressureHistoryModel::clear);
+    addToolBarAction(action);
+
+    action = new QAction(this);
     action->setText(tr("Copy Chart"));
     connect(action, &QAction::triggered, this, &PressureHistoryDockWidget::copyChartToClipboard);
     addToolBarAction(action);
@@ -109,10 +114,9 @@ void PressureHistoryDockWidget::setupWidgets()
     });
     updateTitle();
 
-    connect(m_config, &PenConfig::pressureLevelsChanged, this, &PressureHistoryDockWidget::updateHistory);
+    connect(m_pressureHistoryModel, &PressureHistoryModel::modelReset, this, &PressureHistoryDockWidget::updateHistory);
     connect(m_info, &PenInfo::pressureChanged, this, [this]() {
         m_pressureHistoryModel->addPressure(m_info->pressure());
-        updateHistory();
     });
 
     m_splitter = new QSplitter(this);
