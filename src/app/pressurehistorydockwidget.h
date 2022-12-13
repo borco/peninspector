@@ -23,6 +23,7 @@
 
 class PenConfig;
 class PenInfo;
+class PressureHistoryModel;
 
 class QAbstractAxis;
 class QChart;
@@ -53,6 +54,7 @@ private:
     QAbstractAxis* m_xAxis {nullptr};
     QAbstractAxis* m_yAxis {nullptr};
 
+    PressureHistoryModel* m_pressureHistoryModel {nullptr};
     QSplitter* m_splitter {nullptr};
 };
 

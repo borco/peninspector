@@ -21,24 +21,24 @@
 
 #include <QAbstractTableModel>
 
-class PressureHistogramModel : public QAbstractTableModel
+class PressureHistoryModel : public QAbstractTableModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(int size READ size NOTIFY sizeChanged)
+    Q_PROPERTY(int size READ size WRITE setSize NOTIFY sizeChanged)
 
 public:
     enum Columns: int {
         ValueColumn = 0,
-        CountColumn,
+        IndexColumn,
     };
 
     struct Pressure {
-        uint value {0};
-        uint count {0};
+        qreal value {0.0};
+        int index {0};
     };
 
-    explicit PressureHistogramModel(QObject *parent = nullptr);
+    explicit PressureHistoryModel(QObject *parent = nullptr);
 
     void clear();
     void addPressure(qreal pressure);
@@ -48,14 +48,17 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    int size() { return m_pressures.size(); }
-    const Pressure& operator[](int index) const { return m_pressures[index]; }
+    int size() { return m_size; }
+    void setSize(int newSize);
 
-    inline static const qreal PressureMultiplier {100'000.0};
+    const Pressure& at(int index) const { return m_pressures[index]; }
 
 signals:
     void sizeChanged();
 
 private:
-    QList<Pressure> m_pressures;
+    int m_size {200};
+    int m_currentIndex {0};
+    QVector<Pressure> m_pressures;
 };
+

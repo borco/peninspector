@@ -29,6 +29,7 @@ void PressureHistogramModel::clear()
     beginResetModel();
     m_pressures.clear();
     endResetModel();
+    emit sizeChanged();
 }
 
 void PressureHistogramModel::addPressure(qreal pressure)
@@ -67,6 +68,8 @@ void PressureHistogramModel::addPressure(qreal pressure)
             }
         }
     }
+
+    emit sizeChanged();
 }
 
 QVariant PressureHistogramModel::headerData(int section, Qt::Orientation orientation, int role) const

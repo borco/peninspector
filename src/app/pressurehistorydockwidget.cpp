@@ -21,10 +21,13 @@
 
 #include "penconfig.h"
 #include "peninfo.h"
+#include "pressurehistorymodel.h"
 
 #include <QChart>
 #include <QChartView>
 #include <QGraphicsLayout>
+#include <QLineSeries>
+#include <QPointF>
 #include <QSettings>
 #include <QSplitter>
 #include <QTableView>
@@ -44,6 +47,7 @@ PressureHistoryDockWidget::PressureHistoryDockWidget(PenConfig *penConfig, PenIn
     , m_chart(new QChart())
     , m_xAxis(new QValueAxis())
     , m_yAxis(new QValueAxis())
+    , m_pressureHistoryModel(new PressureHistoryModel(this))
 {
     setupToolBarActions();
     setupWidgets();
@@ -95,7 +99,7 @@ void PressureHistoryDockWidget::setupWidgets()
 
     connect(m_config, &PenConfig::pressureLevelsChanged, this, &PressureHistoryDockWidget::updateHistory);
     connect(m_info, &PenInfo::pressureChanged, this, [this]() {
-//        m_pressureHistogramModel->addPressure(m_info->pressure());
+        m_pressureHistoryModel->addPressure(m_info->pressure());
         updateHistory();
     });
 
@@ -107,6 +111,7 @@ void PressureHistoryDockWidget::setupWidgets()
 
     auto table_view = new QTableView(this);
     table_view->setFrameShape(QFrame::NoFrame);
+    table_view->setModel(m_pressureHistoryModel);
     m_splitter->addWidget(table_view);
 
     setWidget(m_splitter);
@@ -114,6 +119,28 @@ void PressureHistoryDockWidget::setupWidgets()
 
 void PressureHistoryDockWidget::updateHistory()
 {
+    const auto levels = m_config->pressureLevels();
+
+    auto series = new QLineSeries();
+
+    for (int i = 0; i < m_pressureHistoryModel->size(); ++i) {
+        const auto pressure = m_pressureHistoryModel->at(i);
+        series->append(QPointF(pressure.index, pressure.value));
+    }
+
+    series->setName(tr("<b>%1</b>").arg(m_config->name()));
+
+    m_chart->removeAllSeries();
+    m_chart->addSeries(series);
+
+    if (m_pressureHistoryModel->size() > 0) {
+        m_xAxis->setRange(m_pressureHistoryModel->at(0).index,
+                          m_pressureHistoryModel->at(m_pressureHistoryModel->size() - 1).index);
+    }
+    series->attachAxis(m_xAxis);
+
+    m_yAxis->setRange(0, 1);
+    series->attachAxis(m_yAxis);
 }
 
 void PressureHistoryDockWidget::copyChartToClipboard()
