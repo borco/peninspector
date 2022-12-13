@@ -34,7 +34,7 @@ public:
     };
 
     struct Pressure {
-        uint value {0};
+        qreal value {0.0};
         uint count {0};
     };
 
@@ -50,8 +50,6 @@ public:
 
     int size() { return m_pressures.size(); }
     const Pressure& operator[](int index) const { return m_pressures[index]; }
-
-    inline static const qreal PressureMultiplier {100'000.0};
 
 signals:
     void sizeChanged();

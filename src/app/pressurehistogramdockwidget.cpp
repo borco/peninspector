@@ -74,7 +74,7 @@ void PressureHistogramDockWidget::updateHistogram()
 
         for (int i = 0; i < m_pressureHistogramModel->size(); ++i) {
             const auto pressure = (*m_pressureHistogramModel)[i];
-            uint index = pressure.value / PressureHistogramModel::PressureMultiplier * levels;
+            uint index = pressure.value * levels;
             data[index] += pressure.count;
         }
 

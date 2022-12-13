@@ -35,34 +35,32 @@ void PressureHistogramModel::clear()
 void PressureHistogramModel::addPressure(qreal pressure)
 {
     // find insert location
-    uint value = pressure * PressureMultiplier;
-
-    if (value <= 0)
+    if (qFuzzyIsNull(pressure))
         return;
 
     if (m_pressures.isEmpty()) {
         beginInsertRows(QModelIndex(), 0, 0);
-        m_pressures.append({value, 1});
+        m_pressures.append({pressure, 1});
         endInsertRows();
-    } else if (value < m_pressures[0].value) {
+    } else if (pressure < m_pressures[0].value) {
         beginInsertRows(QModelIndex(), 0, 0);
-        m_pressures.insert(0, {value, 1});
+        m_pressures.insert(0, {pressure, 1});
         endInsertRows();
-    } else if (value > m_pressures.last().value) {
+    } else if (pressure > m_pressures.last().value) {
         beginInsertRows(QModelIndex(), m_pressures.size(), m_pressures.size());
-        m_pressures.append({value, 1});
+        m_pressures.append({pressure, 1});
         endInsertRows();
     } else {
         for (int i = 0; i < m_pressures.size(); ++i) {
-            if (m_pressures[i].value == value) {
+            if (qFuzzyCompare(m_pressures[i].value, pressure)) {
                 m_pressures[i].count += 1;
                 emit dataChanged(index(i, 0), index(i, 0));
                 break;
             }
             if (i < m_pressures.size() - 1) {
-                if (value > m_pressures[i].value && value < m_pressures[i+1].value) {
+                if (pressure > m_pressures[i].value && pressure < m_pressures[i+1].value) {
                     beginInsertRows(QModelIndex(), i + 1, i + 1);
-                    m_pressures.insert(i + 1, {value, 1});
+                    m_pressures.insert(i + 1, {pressure, 1});
                     endInsertRows();
                 }
             }
@@ -103,7 +101,7 @@ QVariant PressureHistogramModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         switch(index.column()) {
         case ValueColumn: {
-            return m_pressures[index.row()].value / PressureMultiplier;
+            return m_pressures[index.row()].value;
         }
         case CountColumn: {
             return m_pressures[index.row()].count;
