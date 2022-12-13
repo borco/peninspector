@@ -25,6 +25,7 @@
 #include "penconfigquickdockwidget.h"
 #include "peninfoquickdockwidget.h"
 #include "pressurehistogramdockwidget.h"
+#include "pressurehistorydockwidget.h"
 
 #include <QActionGroup>
 #include <QInputDevice>
@@ -68,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_docks << new PenInfoQuickDockWidget(pen_info, this);
     m_docks << new PenConfigQuickDockWidget(m_configs, this);
     m_docks << new PressureHistogramDockWidget(m_config, pen_info, this);
+    m_docks << new PressureHistoryDockWidget(m_config, pen_info, this);
 
     for (const auto& dock: m_docks) {
         dock->configure();

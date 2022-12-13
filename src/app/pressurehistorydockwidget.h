@@ -23,18 +23,17 @@
 
 class PenConfig;
 class PenInfo;
-class PressureHistogramModel;
 
 class QAbstractAxis;
 class QChart;
 class QChartView;
 class QSplitter;
 
-class PressureHistogramDockWidget : public DockWidget
+class PressureHistoryDockWidget : public DockWidget
 {
 public:
-    explicit PressureHistogramDockWidget(PenConfig *penConfig, PenInfo *penInfo, QWidget* parent = nullptr);
-    ~PressureHistogramDockWidget() override;
+    PressureHistoryDockWidget(PenConfig *penConfig, PenInfo *penInfo, QWidget* parent = nullptr);
+    ~PressureHistoryDockWidget() override;
 
     void saveSettings() const override;
     void loadSettings() override;
@@ -42,7 +41,7 @@ public:
 private:
     void setupToolBarActions();
     void setupWidgets();
-    void updateHistogram();
+    void updateHistory();
     void copyChartToClipboard();
     void saveChartToDisk();
 
@@ -54,6 +53,6 @@ private:
     QAbstractAxis* m_xAxis {nullptr};
     QAbstractAxis* m_yAxis {nullptr};
 
-    PressureHistogramModel* m_pressureHistogramModel {nullptr};
     QSplitter* m_splitter {nullptr};
 };
+

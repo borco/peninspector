@@ -23,6 +23,8 @@ set(PROJECT_SOURCES
     pressurehistogramdockwidget.h
     pressurehistogrammodel.cpp
     pressurehistogrammodel.h
+    pressurehistorydockwidget.cpp
+    pressurehistorydockwidget.h
     quickdockwidget.cpp
     quickdockwidget.h
 )

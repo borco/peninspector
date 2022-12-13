@@ -52,36 +52,8 @@ PressureHistogramDockWidget::PressureHistogramDockWidget(PenConfig* penConfig, P
     , m_yAxis(new QValueAxis())
     , m_pressureHistogramModel(new PressureHistogramModel(this))
 {
-    addToolBarSeparator();
-
-    auto action = new QAction(this);
-    action->setText(tr("Copy Chart"));
-    connect(action, &QAction::triggered, this, &PressureHistogramDockWidget::copyChartToClipboard);
-    addToolBarAction(action);
-
-    m_chart->layout()->setContentsMargins(0, 0, 0, 0);
-    m_chart->setBackgroundRoundness(0);
-    m_chart->addAxis(m_xAxis, Qt::AlignBottom);
-    m_chart->addAxis(m_yAxis, Qt::AlignLeft);
-
-    connect(m_config, &PenConfig::pressureLevelsChanged, this, &PressureHistogramDockWidget::updateHistogram);
-    connect(m_info, &PenInfo::pressureChanged, this, [this]() {
-        m_pressureHistogramModel->addPressure(m_info->pressure());
-        updateHistogram();
-    });
-
-    m_splitter = new QSplitter(this);
-
-    m_chartView = new QChartView(m_chart, this);
-    m_chartView->setRenderHint(QPainter::Antialiasing);
-    m_splitter->addWidget(m_chartView);
-
-    auto table_view = new QTableView(this);
-    table_view->setFrameShape(QFrame::NoFrame);
-    table_view->setModel(m_pressureHistogramModel);
-    m_splitter->addWidget(table_view);
-
-    setWidget(m_splitter);
+    setupToolBarActions();
+    setupWidgets();
     updateHistogram();
 }
 
@@ -136,6 +108,10 @@ void PressureHistogramDockWidget::copyChartToClipboard()
     clipboard->setMimeData(data);
 }
 
+void PressureHistogramDockWidget::saveChartToDisk()
+{
+}
+
 void PressureHistogramDockWidget::saveSettings() const
 {
     QSettings settings;
@@ -150,4 +126,41 @@ void PressureHistogramDockWidget::loadSettings()
     settings.beginGroup(SettingsGroupKey);
     m_splitter->restoreState(settings.value(SplitterStateKey).toByteArray());
     settings.endGroup();
+}
+
+void PressureHistogramDockWidget::setupToolBarActions()
+{
+    addToolBarSeparator();
+
+    auto action = new QAction(this);
+    action->setText(tr("Copy Chart"));
+    connect(action, &QAction::triggered, this, &PressureHistogramDockWidget::copyChartToClipboard);
+    addToolBarAction(action);
+}
+
+void PressureHistogramDockWidget::setupWidgets()
+{
+    m_chart->layout()->setContentsMargins(0, 0, 0, 0);
+    m_chart->setBackgroundRoundness(0);
+    m_chart->addAxis(m_xAxis, Qt::AlignBottom);
+    m_chart->addAxis(m_yAxis, Qt::AlignLeft);
+
+    connect(m_config, &PenConfig::pressureLevelsChanged, this, &PressureHistogramDockWidget::updateHistogram);
+    connect(m_info, &PenInfo::pressureChanged, this, [this]() {
+        m_pressureHistogramModel->addPressure(m_info->pressure());
+        updateHistogram();
+    });
+
+    m_splitter = new QSplitter(this);
+
+    m_chartView = new QChartView(m_chart, this);
+    m_chartView->setRenderHint(QPainter::Antialiasing);
+    m_splitter->addWidget(m_chartView);
+
+    auto table_view = new QTableView(this);
+    table_view->setFrameShape(QFrame::NoFrame);
+    table_view->setModel(m_pressureHistogramModel);
+    m_splitter->addWidget(table_view);
+
+    setWidget(m_splitter);
 }
