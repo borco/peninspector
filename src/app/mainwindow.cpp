@@ -196,7 +196,7 @@ void MainWindow::updateConfigsMenu()
 
     m_configToolButton->setMenu(menu);
 
-    qDebug() << "Updated configs menu";
+//    qDebug() << "Updated configs menu";
 }
 
 void MainWindow::updateConfigToolButtonText()
