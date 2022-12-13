@@ -24,10 +24,8 @@
 #include <QSettings>
 
 namespace {
-namespace {
 static const char* DefaultSettingsArrayKey {"ConfigModel"};
 static const char* ConfigKey {"config"};
-}
 }
 
 PenConfigModel::PenConfigModel(QObject *parent)
@@ -72,7 +70,7 @@ bool PenConfigModel::insertRows(int row, int count, const QModelIndex &parent)
         if (0 <= i && i < m_configs.size()) {
             m_configs.insert(i, config);
         } else {
-            qWarning() << "Can't insert row at" << i << "so appending it!";
+//            qWarning() << "Can't insert row at" << i << "so appending it!";
             m_configs.append(config);
         }
     }
