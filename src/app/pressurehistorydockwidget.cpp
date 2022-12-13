@@ -84,10 +84,10 @@ void PressureHistoryDockWidget::setupToolBarActions()
     connect(action, &QAction::triggered, this, &PressureHistoryDockWidget::copyChartToClipboard);
     addToolBarAction(action);
 
-    action = new QAction(this);
-    action->setText(tr("Save Chart"));
-    connect(action, &QAction::triggered, this, &PressureHistoryDockWidget::saveChartToDisk);
-    addToolBarAction(action);
+//    action = new QAction(this);
+//    action->setText(tr("Save Chart"));
+//    connect(action, &QAction::triggered, this, &PressureHistoryDockWidget::saveChartToDisk);
+//    addToolBarAction(action);
 }
 
 void PressureHistoryDockWidget::setupWidgets()
@@ -157,6 +157,6 @@ void PressureHistoryDockWidget::copyChartToClipboard()
 {
 }
 
-void PressureHistoryDockWidget::saveChartToDisk()
-{
-}
+//void PressureHistoryDockWidget::saveChartToDisk()
+//{
+//}

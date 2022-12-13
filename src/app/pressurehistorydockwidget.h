@@ -45,7 +45,7 @@ private:
     void updateHistory();
     void updateTitle();
     void copyChartToClipboard();
-    void saveChartToDisk();
+//    void saveChartToDisk();
 
     PenConfig* m_config {nullptr};
     PenInfo* m_info {nullptr};
