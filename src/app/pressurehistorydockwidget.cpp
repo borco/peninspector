@@ -96,6 +96,12 @@ void PressureHistoryDockWidget::setupWidgets()
     m_chart->setBackgroundRoundness(0);
     m_chart->addAxis(m_xAxis, Qt::AlignBottom);
     m_chart->addAxis(m_yAxis, Qt::AlignLeft);
+    m_chart->legend()->hide();
+
+    connect(m_config, &PenConfig::nameChanged, this, [this](){
+        updateTitle();
+    });
+    updateTitle();
 
     connect(m_config, &PenConfig::pressureLevelsChanged, this, &PressureHistoryDockWidget::updateHistory);
     connect(m_info, &PenInfo::pressureChanged, this, [this]() {
@@ -128,8 +134,6 @@ void PressureHistoryDockWidget::updateHistory()
         series->append(QPointF(pressure.index, pressure.value));
     }
 
-    series->setName(tr("<b>%1</b>").arg(m_config->name()));
-
     m_chart->removeAllSeries();
     m_chart->addSeries(series);
 
@@ -141,6 +145,11 @@ void PressureHistoryDockWidget::updateHistory()
 
     m_yAxis->setRange(0, 1);
     series->attachAxis(m_yAxis);
+}
+
+void PressureHistoryDockWidget::updateTitle()
+{
+    m_chart->setTitle(tr("<b>Pressure History | %1</b>").arg(m_config->name()));
 }
 
 void PressureHistoryDockWidget::copyChartToClipboard()

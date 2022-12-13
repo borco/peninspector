@@ -84,12 +84,6 @@ void PressureHistogramDockWidget::updateHistogram()
             max_count = qMax(max_count, data[i]);
         }
 
-        series->setName(tr("<b>%1</b> <br> <i>pressure levels:</i> %2 <br> <i>detected levels:</i> %3")
-                        .arg(m_config->name())
-                        .arg(levels)
-                        .arg(m_pressureHistogramModel->size())
-                        );
-
         m_chart->removeAllSeries();
         m_chart->addSeries(series);
 
@@ -99,6 +93,14 @@ void PressureHistogramDockWidget::updateHistogram()
         m_yAxis->setRange(0, max_count);
         series->attachAxis(m_yAxis);
 }
+
+void PressureHistogramDockWidget::updateTitle()
+{
+    m_chart->setTitle(tr("<center><b>Pressure Histogram | %1</b><br>pressure levels: %2, detected levels: %3</center>")
+                    .arg(m_config->name())
+                    .arg(m_config->pressureLevels())
+                    .arg(m_pressureHistogramModel->size())
+                    );}
 
 void PressureHistogramDockWidget::copyChartToClipboard()
 {
@@ -144,11 +146,15 @@ void PressureHistogramDockWidget::setupWidgets()
     m_chart->setBackgroundRoundness(0);
     m_chart->addAxis(m_xAxis, Qt::AlignBottom);
     m_chart->addAxis(m_yAxis, Qt::AlignLeft);
+    m_chart->legend()->hide();
+
+    connect(m_config, &PenConfig::nameChanged, this, &PressureHistogramDockWidget::updateTitle);
 
     connect(m_config, &PenConfig::pressureLevelsChanged, this, &PressureHistogramDockWidget::updateHistogram);
     connect(m_info, &PenInfo::pressureChanged, this, [this]() {
         m_pressureHistogramModel->addPressure(m_info->pressure());
         updateHistogram();
+        updateTitle();
     });
 
     m_splitter = new QSplitter(this);

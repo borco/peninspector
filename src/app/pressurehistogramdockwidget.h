@@ -43,6 +43,7 @@ private:
     void setupToolBarActions();
     void setupWidgets();
     void updateHistogram();
+    void updateTitle();
     void copyChartToClipboard();
     void saveChartToDisk();
 
