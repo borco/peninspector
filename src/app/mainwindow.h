@@ -49,6 +49,7 @@ protected:
     void closeEvent(QCloseEvent *event) override;
 
 private:
+    void setupWidgets();
     void loadSettings();
     void saveSettings() const;
     void updateConfigsMenu();

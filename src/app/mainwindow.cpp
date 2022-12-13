@@ -29,12 +29,14 @@
 
 #include <QActionGroup>
 #include <QInputDevice>
+#include <QLabel>
 #include <QMenu>
 #include <QMenuBar>
 #include <QSettings>
 #include <QTabletEvent>
 #include <QToolBar>
 #include <QToolButton>
+#include <QVBoxLayout>
 
 namespace {
 static const char* SettingsGroupKey { "MainWindow" };
@@ -43,6 +45,9 @@ static const char* StateKey {"state"};
 static const char* ConfigKey {"penConfig"};
 static const char* ConfigIndexKey {"penConfigIndex"};
 static const char* NoConfigText {"<pen not set>"};
+
+static const int IconSize{12};
+static const int TitleIndent{4};
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -50,44 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_configs(new PenConfigModel(this))
     , m_config(new PenConfig(this))
 {
-    setDockNestingEnabled(true);
-
-    setWindowTitle(tr("PenInspector"));
-
-    auto canvas = new Canvas(this);
-    auto pen_info = canvas->penInfo();
-    setCentralWidget(canvas);
-
-    auto windows_menu = new QMenu(tr("Docks"), this);
-    menuBar()->addMenu(windows_menu);
-
-    auto tool_bar = new QToolBar(this);
-    tool_bar->setObjectName("toolbar");
-    tool_bar->setMovable(false);
-    addToolBar(Qt::TopToolBarArea, tool_bar);
-
-    m_docks << new PenInfoQuickDockWidget(pen_info, this);
-    m_docks << new PenConfigQuickDockWidget(m_configs, this);
-    m_docks << new PressureHistogramDockWidget(m_config, pen_info, this);
-    m_docks << new PressureHistoryDockWidget(m_config, pen_info, this);
-
-    for (const auto& dock: m_docks) {
-        dock->configure();
-        auto action = dock->toggleViewAction();
-        windows_menu->addAction(action);
-        tool_bar->addAction(action);
-        addDockWidget(Qt::LeftDockWidgetArea, dock);
-    }
-
-    tool_bar->addSeparator();
-
-    m_configActionsGroup = new QActionGroup(this);
-    m_configToolButton = new QToolButton(this);
-    m_configToolButton->setText(NoConfigText);
-    m_configToolButton->setPopupMode(QToolButton::InstantPopup);
-    tool_bar->addWidget(m_configToolButton);
-
-    tool_bar->addAction(canvas->actions().at(0));
+    setupWidgets();
 
     loadSettings();
 
@@ -208,6 +176,66 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     saveSettings();
     qDebug() << "Closing main window...";
+}
+
+void MainWindow::setupWidgets()
+{
+    setDockNestingEnabled(true);
+    setWindowTitle(tr("PenInspector"));
+
+    auto widget = new QWidget(this);
+    widget->setMinimumSize(200, 200);
+
+    auto widget_layout = new QVBoxLayout(widget);
+    widget_layout->setContentsMargins(0, 0, 0, 0);
+    widget_layout->setSpacing(0);
+
+    auto widget_tool_bar = new QToolBar(this);
+    widget_tool_bar->setIconSize(QSize(IconSize, IconSize));
+    widget_tool_bar->setMovable(false);
+    widget_layout->addWidget(widget_tool_bar);
+
+    auto label = new QLabel(tr("Canvas"), this);
+    label->setIndent(TitleIndent);
+    widget_tool_bar->addWidget(label);
+    widget_tool_bar->addSeparator();
+
+    auto canvas = new Canvas(this);
+    widget_layout->addWidget(canvas, 1);
+    widget_tool_bar->addAction(canvas->actions().at(0));
+
+    setCentralWidget(widget);
+
+    auto pen_info = canvas->penInfo();
+
+    auto windows_menu = new QMenu(tr("Docks"), this);
+    menuBar()->addMenu(windows_menu);
+
+    auto app_tool_bar = new QToolBar(this);
+    app_tool_bar->setObjectName("app_tool_bar");
+    app_tool_bar->setMovable(false);
+    addToolBar(Qt::TopToolBarArea, app_tool_bar);
+
+    m_docks << new PenInfoQuickDockWidget(pen_info, this);
+    m_docks << new PenConfigQuickDockWidget(m_configs, this);
+    m_docks << new PressureHistogramDockWidget(m_config, pen_info, this);
+    m_docks << new PressureHistoryDockWidget(m_config, pen_info, this);
+
+    for (const auto& dock: m_docks) {
+        dock->configure();
+        auto action = dock->toggleViewAction();
+        windows_menu->addAction(action);
+        app_tool_bar->addAction(action);
+        addDockWidget(Qt::LeftDockWidgetArea, dock);
+    }
+
+    app_tool_bar->addSeparator();
+
+    m_configActionsGroup = new QActionGroup(this);
+    m_configToolButton = new QToolButton(this);
+    m_configToolButton->setText(NoConfigText);
+    m_configToolButton->setPopupMode(QToolButton::InstantPopup);
+    app_tool_bar->addWidget(m_configToolButton);
 }
 
 void MainWindow::setConfigIndex(int newConfigIndex)
