@@ -142,6 +142,8 @@ void PressureHistogramDockWidget::setupToolBarActions()
 
 void PressureHistogramDockWidget::setupWidgets()
 {
+    m_xAxis->setLabelFormat("%i");
+
     m_chart->layout()->setContentsMargins(0, 0, 0, 0);
     m_chart->setBackgroundRoundness(0);
     m_chart->addAxis(m_xAxis, Qt::AlignBottom);

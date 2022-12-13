@@ -25,10 +25,10 @@ class PenConfig;
 class PenInfo;
 class PressureHistogramModel;
 
-class QAbstractAxis;
 class QChart;
 class QChartView;
 class QSplitter;
+class QValueAxis;
 
 class PressureHistogramDockWidget : public DockWidget
 {
@@ -52,8 +52,8 @@ private:
 
     QChart* m_chart {nullptr};
     QChartView* m_chartView {nullptr};
-    QAbstractAxis* m_xAxis {nullptr};
-    QAbstractAxis* m_yAxis {nullptr};
+    QValueAxis* m_xAxis {nullptr};
+    QValueAxis* m_yAxis {nullptr};
 
     PressureHistogramModel* m_pressureHistogramModel {nullptr};
     QSplitter* m_splitter {nullptr};
