@@ -69,16 +69,16 @@ void PressureHistogramDockWidget::updateHistogram()
 
         auto series = new QLineSeries();
 
-        uint data[levels];
+        int data[levels];
         std::memset(data, 0, sizeof data);
 
         for (int i = 0; i < m_pressureHistogramModel->size(); ++i) {
             const auto pressure = (*m_pressureHistogramModel)[i];
-            uint index = pressure.value * levels;
+            int index = pressure.value * levels;
             data[index] += pressure.count;
         }
 
-        uint max_count {0};
+        int max_count {0};
         for (int i = 0; i < levels; ++i) {
             series->append(QPoint(i, data[i]));
             max_count = qMax(max_count, data[i]);

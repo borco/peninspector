@@ -38,8 +38,8 @@ public:
 
     struct Pressure {
         qreal value {0.0};
-        uint level {0};
-        uint count {0};
+        int level {0};
+        int count {0};
     };
 
     explicit PressureHistogramModel(PenConfig* config, QObject *parent = nullptr);

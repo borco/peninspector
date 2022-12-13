@@ -42,7 +42,7 @@ void PressureHistogramModel::addPressure(qreal pressure)
     if (qFuzzyIsNull(pressure))
         return;
 
-    uint level = pressure * m_config->pressureLevels();
+    int level = pressure * m_config->pressureLevels();
 
     if (m_pressures.isEmpty()) {
         beginInsertRows(QModelIndex(), 0, 0);
