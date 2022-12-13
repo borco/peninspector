@@ -52,7 +52,7 @@ signals:
 
 private:
     QString m_name {"Pen"};
-    int m_pressureLevels {0};
+    int m_pressureLevels {256};
     qreal m_tilt {0.0}; // degrees
 };
 
