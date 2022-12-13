@@ -2,7 +2,7 @@
 
 Simple Qt application to inspect data provided by graphics tablet styluses.
 
-Tested on macOS, but it should work on Windows and Linux, too.
+Tested on macOS.
 
 ![main window](docs/main_window.png)
 
@@ -11,24 +11,23 @@ Tested on macOS, but it should work on Windows and Linux, too.
 * configure your stylus using the **Pen Config** dock
 * select one of your styluses as the active one in the top application toolbar
 * draw something with your stylus in the canvas area
-* the **Pressure Histogram** dock will show a histogram with the pressure values reported by the stylus
-* copy the chart image to clipboard using **Copy Chart** button from the *Pressure Histogram* dock toolbar
+* the **Pressure Histogram** dock will show a histogram with the pressure
+* the **Pressure History** dock will show the actual pressure level as you draw in the canvas area
+* copy the chart images to clipboard using **Copy Chart** buttons from the *Pressure Histogram* or *Pressure History* docks' toolbars
 
 ### Pen Config Dock
 
 * set a name so that you can identify your pen in the top toolbar
 * the *pressure levels* is used by the **Pressure Histogram** to determine possible bucket values (stylus pressure is reported by Qt as a real number between 0.0 and 1.0)
-* use **Append** to append a new empty config to the end of the config list
-* use **Remove** to remove the **selected** configuration
-* when the app starts with no configured pen, a default pen (XPPen Deco LW) is created by the app
-* this configuration can be changed or deleted, but if there are no other configured pens when the app closes, it will be recreated on restart
+* use the **Plus** button to add a new config to the end of the config list
+* use the **Minus** button to remove the **selected** configuration
+* when the app starts the first time or finds no configured pen on start, a default pen (XPPen Deco LW) will be created
 
 ![pen config](docs/pen_config_dock.png)
 
 ### Pen Info Dock
 
-* displays data reported by Qt from the stylus
-* only the top values are actually reported by Qt (from the top till the separator)
+* displays data reported by operating system from the stylus
 * *tilt angle* and *tilt rotation* values are computed by the application
 
 ![pen info](docs/pen_info_dock.png)
@@ -36,8 +35,28 @@ Tested on macOS, but it should work on Windows and Linux, too.
 ### Pressure Histogram Dock
 
 * shows a histogram (left) and a table with pressure data (right)
-* the pressure data table contains the actual pressure value reported by Qt (in the *Pressure* column) and how many times it was reported (in the *Count* column)
+* the pressure data table contains:
+  * Pressure: the actual pressure value reported by the operating system
+  * Level: the level, based on the total number of pressure configured for the current pen
+  * Count: how many times this pressure/level was reported
 * use the separator between the histogram and the table to set their widths
+* use the **Clear** button to clear the chart
 * use the **Copy Chart** button to copy the chart to clipboard
 
 ![pressure histogram](docs/pressure_histogram_dock.png)
+
+### Pressure History Dock
+
+* shows a graph with pressure (left) and a table with pressure data (right)
+* every time the operating system reports a new pen event, the pressure value is added at the end (right side) of this graph
+* the pressure data table contains:
+  * Index: the index of the pressure value
+  * Pressure: the actual pressure value reported by the operating system
+  * Level: the level, based on the total number of pressure configured for the current pen
+* use the separator between the histogram and the table to set their widths
+* use the **Clear** button to clear the chart
+* use the **Copy Chart** button to copy the chart to clipboard
+
+![pressure history](docs/pressure_history_dock.png)
+
+Copyright (C) 2022 by Ioan Calin Borcoman (<iborco@gmail.com>)
