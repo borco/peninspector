@@ -50,7 +50,7 @@ PressureHistogramDockWidget::PressureHistogramDockWidget(PenConfig* penConfig, P
     , m_chart(new QChart())
     , m_xAxis(new QValueAxis())
     , m_yAxis(new QValueAxis())
-    , m_pressureHistogramModel(new PressureHistogramModel(this))
+    , m_pressureHistogramModel(new PressureHistogramModel(penConfig, this))
 {
     setupToolBarActions();
     setupWidgets();

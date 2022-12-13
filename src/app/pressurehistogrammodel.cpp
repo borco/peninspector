@@ -19,9 +19,13 @@
 
 #include "pressurehistogrammodel.h"
 
-PressureHistogramModel::PressureHistogramModel(QObject *parent)
+#include "penconfig.h"
+
+PressureHistogramModel::PressureHistogramModel(PenConfig *config, QObject *parent)
     : QAbstractTableModel(parent)
+    , m_config(config)
 {
+    connect(m_config, &PenConfig::pressureLevelsChanged, this, &PressureHistogramModel::clear);
 }
 
 void PressureHistogramModel::clear()
@@ -38,17 +42,19 @@ void PressureHistogramModel::addPressure(qreal pressure)
     if (qFuzzyIsNull(pressure))
         return;
 
+    uint level = pressure * m_config->pressureLevels();
+
     if (m_pressures.isEmpty()) {
         beginInsertRows(QModelIndex(), 0, 0);
-        m_pressures.append({pressure, 1});
+        m_pressures.append({pressure, level, 1});
         endInsertRows();
     } else if (pressure < m_pressures[0].value) {
         beginInsertRows(QModelIndex(), 0, 0);
-        m_pressures.insert(0, {pressure, 1});
+        m_pressures.insert(0, {pressure, level, 1});
         endInsertRows();
     } else if (pressure > m_pressures.last().value) {
         beginInsertRows(QModelIndex(), m_pressures.size(), m_pressures.size());
-        m_pressures.append({pressure, 1});
+        m_pressures.append({pressure, level, 1});
         endInsertRows();
     } else {
         for (int i = 0; i < m_pressures.size(); ++i) {
@@ -60,7 +66,7 @@ void PressureHistogramModel::addPressure(qreal pressure)
             if (i < m_pressures.size() - 1) {
                 if (pressure > m_pressures[i].value && pressure < m_pressures[i+1].value) {
                     beginInsertRows(QModelIndex(), i + 1, i + 1);
-                    m_pressures.insert(i + 1, {pressure, 1});
+                    m_pressures.insert(i + 1, {pressure, level, 1});
                     endInsertRows();
                 }
             }
@@ -75,6 +81,7 @@ QVariant PressureHistogramModel::headerData(int section, Qt::Orientation orienta
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch(section) {
         case ValueColumn: return tr("Pressure");
+        case LevelColumn: return tr("Level");
         case CountColumn: return tr("Count");
         default:
             break;
@@ -90,7 +97,7 @@ int PressureHistogramModel::rowCount(const QModelIndex &parent) const
 
 int PressureHistogramModel::columnCount(const QModelIndex &parent) const
 {
-    return 2;
+    return 3;
 }
 
 QVariant PressureHistogramModel::data(const QModelIndex &index, int role) const
@@ -100,12 +107,9 @@ QVariant PressureHistogramModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole) {
         switch(index.column()) {
-        case ValueColumn: {
-            return m_pressures[index.row()].value;
-        }
-        case CountColumn: {
-            return m_pressures[index.row()].count;
-        }
+        case ValueColumn: return m_pressures[index.row()].value;
+        case LevelColumn: return m_pressures[index.row()].level;
+        case CountColumn: return m_pressures[index.row()].count;
         default:
             break;
         }

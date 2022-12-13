@@ -21,6 +21,8 @@
 
 #include <QAbstractTableModel>
 
+class PenConfig;
+
 class PressureHistogramModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -30,15 +32,17 @@ class PressureHistogramModel : public QAbstractTableModel
 public:
     enum Columns: int {
         ValueColumn = 0,
+        LevelColumn,
         CountColumn,
     };
 
     struct Pressure {
         qreal value {0.0};
+        uint level {0};
         uint count {0};
     };
 
-    explicit PressureHistogramModel(QObject *parent = nullptr);
+    explicit PressureHistogramModel(PenConfig* config, QObject *parent = nullptr);
 
     void clear();
     void addPressure(qreal pressure);
@@ -55,5 +59,6 @@ signals:
     void sizeChanged();
 
 private:
+    PenConfig* m_config {nullptr};
     QList<Pressure> m_pressures;
 };
