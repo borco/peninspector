@@ -59,4 +59,4 @@ Tested on macOS.
 
 ![pressure history](docs/pressure_history_dock.png)
 
-Copyright (C) 2022 by Ioan Calin Borcoman (<iborco@gmail.com>)
+Copyright (C) 2022 by Ioan Calin Borcoman
