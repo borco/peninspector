@@ -80,24 +80,6 @@ Pane {
                 text: currentConfig ? currentConfig.tilt : ""
                 onTextChanged: if (currentConfig) currentConfig.tilt = parseFloat(text)
             }
-
-            DescriptionLabel { text: qsTr("Resolution (LPI):") }
-            ValueEdit {
-                text: currentConfig ? currentConfig.resolution : ""
-                onTextChanged: if (currentConfig) currentConfig.resolution = parseInt(text, 10)
-            }
-
-            DescriptionLabel { text: qsTr("Work Width (inches):") }
-            ValueEdit {
-                text: currentConfig ? currentConfig.workWidth : ""
-                onTextChanged: if (currentConfig) currentConfig.workWidth = parseFloat(text)
-            }
-
-            DescriptionLabel { text: qsTr("Work Height (inches):") }
-            ValueEdit {
-                text: currentConfig ? currentConfig.workHeight : ""
-                onTextChanged: if (currentConfig) currentConfig.workHeight = parseFloat(text)
-            }
         }
 
         Item {

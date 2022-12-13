@@ -136,9 +136,6 @@ void PenConfigModel::loadSettings()
         conf->setName("XPPen - Deco LW");
         conf->setPressureLevels(8192);
         conf->setTilt(60);
-        conf->setResolution(5080);
-        conf->setWorkWidth(10);
-        conf->setWorkHeight(6);
         m_configs << conf;
     }
 
