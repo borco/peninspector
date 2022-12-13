@@ -104,7 +104,7 @@ void PenConfigModel::removeConfig(int index)
     }
 }
 
-PenConfig *PenConfigModel::config(int index) const
+PenConfig *PenConfigModel::at(int index) const
 {
     if (0 <= index && index < m_configs.size())
         return m_configs[index];
@@ -140,6 +140,8 @@ void PenConfigModel::loadSettings()
     }
 
     endResetModel();
+
+    emit sizeChanged();
 }
 
 void PenConfigModel::saveSettings()

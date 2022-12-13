@@ -51,7 +51,7 @@ public:
 
     Q_INVOKABLE void appendConfig();
     Q_INVOKABLE void removeConfig(int index);
-    Q_INVOKABLE PenConfig* config(int index) const;
+    Q_INVOKABLE PenConfig* at(int index) const;
 
     void loadSettings();
     void saveSettings();

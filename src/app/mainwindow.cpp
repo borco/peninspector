@@ -148,13 +148,14 @@ void MainWindow::updateConfigsMenu()
     if (m_configToolButton->menu()) {
         qDeleteAll(m_configToolButton->menu()->actions());
         delete m_configToolButton->menu();
+        m_configToolButton->setMenu(nullptr);
     }
 
     auto menu = new QMenu(this);
 
     for (int i = 0; i < m_configs->size(); ++i) {
-        auto config = m_configs->config(i);
-        auto action = new QAction(this);
+        auto config = m_configs->at(i);
+        auto action = new QAction(menu);
         action->setCheckable(true);
         action->setText(config->name());
 
@@ -162,26 +163,26 @@ void MainWindow::updateConfigsMenu()
             action->setChecked(true);
         }
 
-        connect(config, &PenConfig::nameChanged, this, [this, config, action, i]() {
+        connect(config, &PenConfig::nameChanged, menu, [this, config, action, i]() {
             action->setText(config->name());
             if (m_configIndex == i) {
                 m_config->setName(config->name());
             }
         });
 
-        connect(config, &PenConfig::pressureLevelsChanged, this, [this, config, i]() {
+        connect(config, &PenConfig::pressureLevelsChanged, menu, [this, config, i]() {
             if (m_configIndex == i) {
                 m_config->setPressureLevels(config->pressureLevels());
             }
         });
 
-        connect(config, &PenConfig::tiltChanged, this, [this, config, i]() {
+        connect(config, &PenConfig::tiltChanged, menu, [this, config, i]() {
             if (m_configIndex == i) {
                 m_config->setTilt(config->tilt());
             }
         });
 
-        connect(action, &QAction::triggered, this, [this, config, i]() {
+        connect(action, &QAction::triggered, menu, [this, config, i]() {
             m_configToolButton->setText(config->name());
             *m_config = *config;
             setConfigIndex(i);
