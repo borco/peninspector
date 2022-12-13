@@ -47,7 +47,7 @@ PressureHistoryDockWidget::PressureHistoryDockWidget(PenConfig *penConfig, PenIn
     , m_chart(new QChart())
     , m_xAxis(new QValueAxis())
     , m_yAxis(new QValueAxis())
-    , m_pressureHistoryModel(new PressureHistoryModel(this))
+    , m_pressureHistoryModel(new PressureHistoryModel(penConfig, this))
 {
     setupToolBarActions();
     setupWidgets();

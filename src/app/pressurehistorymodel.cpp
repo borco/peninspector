@@ -19,9 +19,14 @@
 
 #include "pressurehistorymodel.h"
 
-PressureHistoryModel::PressureHistoryModel(QObject *parent)
+#include "penconfig.h"
+
+PressureHistoryModel::PressureHistoryModel(PenConfig *config, QObject *parent)
     : QAbstractTableModel(parent)
+    , m_config(config)
 {
+    connect(m_config, &PenConfig::pressureLevelsChanged, this, &PressureHistoryModel::clear);
+
     m_pressures.resize(m_size);
     m_currentIndex = m_size - 1;
 }
@@ -30,7 +35,7 @@ void PressureHistoryModel::clear()
 {
     beginResetModel();
     for (int i = 0; i < m_size; ++i) {
-        m_pressures[i] = Pressure{0.0, i};
+        m_pressures[i] = Pressure{0.0, 0, i};
     }
     m_currentIndex = m_size - 1;
     endResetModel();
@@ -45,7 +50,8 @@ void PressureHistoryModel::addPressure(qreal pressure)
     for (int i = 0; i < m_size - 1; ++i) {
         m_pressures[i] = m_pressures[i+1];
     }
-    m_pressures[m_size - 1] = Pressure{pressure, ++m_currentIndex};
+    int level = pressure * m_config->pressureLevels();
+    m_pressures[m_size - 1] = Pressure{pressure, level, ++m_currentIndex};
     endResetModel();
 }
 
@@ -53,8 +59,9 @@ QVariant PressureHistoryModel::headerData(int section, Qt::Orientation orientati
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch(section) {
-        case ValueColumn: return tr("Pressure");
         case IndexColumn: return tr("Index");
+        case ValueColumn: return tr("Pressure");
+        case LevelColumn: return tr("Level");
         default:
             break;
         }
@@ -69,7 +76,7 @@ int PressureHistoryModel::rowCount(const QModelIndex &parent) const
 
 int PressureHistoryModel::columnCount(const QModelIndex &parent) const
 {
-    return 2;
+    return 3;
 }
 
 QVariant PressureHistoryModel::data(const QModelIndex &index, int role) const
@@ -79,12 +86,9 @@ QVariant PressureHistoryModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole) {
         switch(index.column()) {
-        case ValueColumn: {
-            return m_pressures[index.row()].value;
-        }
-        case IndexColumn: {
-            return m_pressures[index.row()].index;
-        }
+        case IndexColumn: return m_pressures[index.row()].index;
+        case ValueColumn: return m_pressures[index.row()].value;
+        case LevelColumn: return m_pressures[index.row()].level;
         default:
             break;
         }
@@ -116,7 +120,7 @@ void PressureHistoryModel::setSize(int newSize)
         }
 
         for (int i = delta - 1, index = m_pressures[delta].index; i >= 0; --i, --index) {
-            m_pressures[i] = Pressure{0.0, index};
+            m_pressures[i] = Pressure{0.0, 0, index};
         }
     }
     endResetModel();

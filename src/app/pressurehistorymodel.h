@@ -21,6 +21,8 @@
 
 #include <QAbstractTableModel>
 
+class PenConfig;
+
 class PressureHistoryModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -29,16 +31,18 @@ class PressureHistoryModel : public QAbstractTableModel
 
 public:
     enum Columns: int {
-        ValueColumn = 0,
-        IndexColumn,
+        IndexColumn = 0,
+        ValueColumn,
+        LevelColumn,
     };
 
     struct Pressure {
         qreal value {0.0};
+        int level {0};
         int index {0};
     };
 
-    explicit PressureHistoryModel(QObject *parent = nullptr);
+    explicit PressureHistoryModel(PenConfig* config, QObject *parent = nullptr);
 
     void clear();
     void addPressure(qreal pressure);
@@ -57,6 +61,7 @@ signals:
     void sizeChanged();
 
 private:
+    PenConfig* m_config {nullptr};
     int m_size {200};
     int m_currentIndex {0};
     QVector<Pressure> m_pressures;
