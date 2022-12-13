@@ -27,5 +27,18 @@ PenConfigQuickDockWidget::PenConfigQuickDockWidget(PenConfigModel *penConfigMode
                       "qrc:/qml/PenConfig.qml",
                       parent)
 {
+
+    m_addConfigAction = new QAction(this);
+    m_addConfigAction->setIcon(QIcon(":/icons/config-add.svg"));
+
+    m_removeConfiAction = new QAction(this);
+    m_removeConfiAction->setIcon(QIcon(":/icons/config-remove.svg"));
+
     m_qmlProperties["configModel"] = penConfigModel;
+    m_qmlProperties["addConfigAction"] = m_addConfigAction;
+    m_qmlProperties["removeConfigAction"] = m_removeConfiAction;
+
+    addToolBarSeparator();
+    addToolBarAction(m_addConfigAction);
+    addToolBarAction(m_removeConfiAction);
 }

@@ -27,4 +27,8 @@ class PenConfigQuickDockWidget : public QuickDockWidget
 {
 public:
     explicit PenConfigQuickDockWidget(PenConfigModel* penConfigModel, QWidget* parent = nullptr);
+
+private:
+    QAction* m_addConfigAction {nullptr};
+    QAction* m_removeConfiAction {nullptr};
 };

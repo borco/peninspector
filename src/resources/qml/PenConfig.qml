@@ -18,33 +18,6 @@ Pane {
     ColumnLayout {
         anchors.fill: parent
 
-        RowLayout {
-            Layout.fillWidth: true
-
-            Button {
-                text: qsTr("Append")
-                Layout.fillWidth: true
-                onClicked: {
-                    configModel.appendConfig()
-                    configView.currentIndex = configModel.size - 1
-                }
-            }
-
-            Button {
-                text: qsTr("Remove")
-                Layout.fillWidth: true
-                onClicked: {
-                    const index = configView.currentIndex
-                    if (index < 0)
-                        return
-
-                    configView.currentIndex = -1
-                    configModel.removeConfig(index)
-                    configView.currentIndex = Math.min(index, configModel.size - 1)
-                }
-            }
-        }
-
         ListView {
             id: configView
             model: configModel
@@ -84,6 +57,27 @@ Pane {
 
         Item {
             Layout.fillHeight: true
+        }
+    }
+
+    Connections {
+        target: addConfigAction
+        function onTriggered() {
+            configModel.appendConfig()
+            configView.currentIndex = configModel.size - 1
+        }
+    }
+
+    Connections {
+        target: removeConfigAction
+        function onTriggered() {
+            const index = configView.currentIndex
+            if (index < 0)
+                return
+
+            configView.currentIndex = -1
+            configModel.removeConfig(index)
+            configView.currentIndex = Math.min(index, configModel.size - 1)
         }
     }
 }
