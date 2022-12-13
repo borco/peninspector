@@ -92,6 +92,9 @@ void PressureHistoryDockWidget::setupToolBarActions()
 
 void PressureHistoryDockWidget::setupWidgets()
 {
+    m_xAxis->setLabelFormat("%i");
+    m_yAxis->setLabelFormat("%i");
+
     m_chart->layout()->setContentsMargins(0, 0, 0, 0);
     m_chart->setBackgroundRoundness(0);
     m_chart->addAxis(m_xAxis, Qt::AlignBottom);
@@ -125,13 +128,11 @@ void PressureHistoryDockWidget::setupWidgets()
 
 void PressureHistoryDockWidget::updateHistory()
 {
-    const auto levels = m_config->pressureLevels();
-
     auto series = new QLineSeries();
 
     for (int i = 0; i < m_pressureHistoryModel->size(); ++i) {
         const auto pressure = m_pressureHistoryModel->at(i);
-        series->append(QPointF(pressure.index, pressure.value));
+        series->append(QPointF(pressure.index, pressure.level));
     }
 
     m_chart->removeAllSeries();
@@ -143,7 +144,7 @@ void PressureHistoryDockWidget::updateHistory()
     }
     series->attachAxis(m_xAxis);
 
-    m_yAxis->setRange(0, 1);
+    m_yAxis->setRange(0, m_config->pressureLevels());
     series->attachAxis(m_yAxis);
 }
 
