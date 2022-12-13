@@ -135,6 +135,12 @@ void PressureHistogramDockWidget::setupToolBarActions()
     addToolBarSeparator();
 
     auto action = new QAction(this);
+    action->setText(tr("Clear"));
+    connect(action, &QAction::triggered, m_pressureHistogramModel, &PressureHistogramModel::clear);
+    addToolBarAction(action);
+
+
+    action = new QAction(this);
     action->setText(tr("Copy Chart"));
     connect(action, &QAction::triggered, this, &PressureHistogramDockWidget::copyChartToClipboard);
     addToolBarAction(action);
@@ -152,7 +158,13 @@ void PressureHistogramDockWidget::setupWidgets()
 
     connect(m_config, &PenConfig::nameChanged, this, &PressureHistogramDockWidget::updateTitle);
 
-    connect(m_config, &PenConfig::pressureLevelsChanged, this, &PressureHistogramDockWidget::updateHistogram);
+    connect(m_config, &PenConfig::pressureLevelsChanged, this, [this]() {
+        updateHistogram();
+        updateTitle();
+    });
+
+    connect(m_pressureHistogramModel, &PressureHistogramModel::modelReset, this, &PressureHistogramDockWidget::updateHistogram);
+
     connect(m_info, &PenInfo::pressureChanged, this, [this]() {
         m_pressureHistogramModel->addPressure(m_info->pressure());
         updateHistogram();
