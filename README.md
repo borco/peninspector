@@ -6,6 +6,20 @@ Tested on macOS.
 
 ![main window](docs/main_window.png)
 
+## Installation
+
+### bypass notarize
+
+The `.dmg` installer is not notarized. To be able to install and use `PenInspector.app` from it, you will need to bypass manually the Gatekeeper. Assuming that you've downloaded the `.dmg` in `~/Downloads`, you can bypass the Gatekeeper by running the command bellow in a **Terminal** window before mounting (double-clicking) the `.dmg`:
+
+```sh
+xattr -d com.apple.quarantine ~/Downloads/PenInspector-Installer.dmg
+```
+
+References:
+
+* [How to bypass notarize ](http://www.pa-software.com/documentation/Bypass_Notarize/)
+
 ## Usage
 
 * configure your stylus using the **Pen Config** dock
