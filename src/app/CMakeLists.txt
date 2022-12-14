@@ -70,3 +70,24 @@ install(TARGETS ${APP_NAME}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 qt_finalize_executable(${APP_NAME})
+
+add_custom_target(${APP_NAME}_macdeployqt
+    DEPENDS ${APP_NAME}
+    COMMAND ${MACDEPLOYQT_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.app -qmldir="${CMAKE_SOURCE_DIR}/src/resources/qml"
+)
+
+add_custom_target(${APP_NAME}_create_dmg
+    DEPENDS ${APP_NAME}_macdeployqt
+    COMMAND
+    ${CREATE_DMG_EXECUTABLE}
+    --volname "${APP_NAME} Installer"
+    --volicon "${APP_ICON_MACOS}"
+    --window-pos 200 120
+    --background "${CMAKE_SOURCE_DIR}/src/resources/macos/background.png"
+    --window-size 800 400
+    --icon-size 100
+    --icon "${APP_NAME}.app" 200 190
+    --app-drop-link 600 190
+    "${APP_NAME}-Installer.dmg"
+    "${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.app"
+)

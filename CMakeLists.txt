@@ -16,4 +16,11 @@ find_package(Qt6 REQUIRED COMPONENTS
     Widgets
 )
 
+get_target_property(QMAKE_EXECUTABLE Qt6::qmake IMPORTED_LOCATION)
+get_filename_component(_QT_BIN_DIR_ "${QMAKE_EXECUTABLE}" DIRECTORY)
+find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_QT_BIN_DIR_}")
+find_program(LINUXDEPLOY_EXECUTABLE linuxdeploy linuxdeploy-x86_64.AppImage HINTS "${_QT_BIN_DIR_}")
+find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_QT_BIN_DIR_}")
+find_program(CREATE_DMG_EXECUTABLE create-dmg)
+
 add_subdirectory(src/app)
