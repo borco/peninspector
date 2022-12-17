@@ -13,6 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 REQUIRED COMPONENTS
     Charts
     QuickWidgets
+    Test
     Widgets
 )
 
@@ -23,4 +24,5 @@ find_program(LINUXDEPLOY_EXECUTABLE linuxdeploy linuxdeploy-x86_64.AppImage HINT
 find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_QT_BIN_DIR_}")
 find_program(CREATE_DMG_EXECUTABLE create-dmg)
 
+add_subdirectory(tests)
 add_subdirectory(src/app)
