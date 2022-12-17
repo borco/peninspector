@@ -2,9 +2,13 @@
 
 Simple Qt application to inspect data provided by graphics tablet styluses.
 
-Tested on macOS.
-
 ![main window](docs/main_window.png)
+
+## Detected Levels
+
+| Tablet | Declared | Windows 10 (Ink) | macOS |
+|---|---|---|---|
+| XPPen Deco LW | 8192 | ~1024 | ~256 |
 
 ## Installation
 
