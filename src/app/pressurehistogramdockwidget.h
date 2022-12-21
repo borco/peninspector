@@ -59,4 +59,5 @@ private:
     QSplitter* m_splitter {nullptr};
 
     QList<QAction*> m_windowSizeActions;
+    QActionGroup* m_windowSizeActionGroup = nullptr;
 };

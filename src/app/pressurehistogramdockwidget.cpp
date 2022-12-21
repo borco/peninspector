@@ -52,6 +52,7 @@ PressureHistogramDockWidget::PressureHistogramDockWidget(PenConfig* penConfig, P
     , m_xAxis(new QValueAxis())
     , m_yAxis(new QValueAxis())
     , m_pressureHistogramModel(new PressureHistogramModel(penConfig, this))
+    , m_windowSizeActionGroup(new QActionGroup(this))
 {
     setupToolBarActions();
     setupWidgets();
@@ -153,12 +154,12 @@ void PressureHistogramDockWidget::setupToolBarActions()
 
     QList<int> window_sizes = {20, 40, 100, 200, -1};
 
-    auto action_group = new QActionGroup(this);
     for (int window_size: window_sizes) {
         action = new QAction(this);
         action->setText(window_size > 0 ? QString::number(window_size) : tr("All"));
         action->setCheckable(true);
-        action_group->addAction(action);
+        connect(action, &QAction::triggered, this, [this, window_size]() { m_pressureHistogramModel->setWindowSize(window_size); });
+        m_windowSizeActionGroup->addAction(action);
         m_windowSizeActions << action;
         addToolBarAction(action);
     }
