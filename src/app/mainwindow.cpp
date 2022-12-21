@@ -21,8 +21,8 @@
 
 #include "canvas.h"
 #include "penconfig.h"
+#include "penconfigdockwidget.h"
 #include "penconfigmodel.h"
-#include "penconfigquickdockwidget.h"
 #include "peninfodockwidget.h"
 #include "pressurehistogramdockwidget.h"
 #include "pressurehistorydockwidget.h"
@@ -79,6 +79,9 @@ MainWindow::~MainWindow()
 void MainWindow::loadSettings()
 {
     qDebug() << "Loading main window settings...";
+
+    m_configs->loadSettings();
+
     QSettings settings;
     settings.beginGroup(SettingsGroupKey);
     restoreGeometry(settings.value(GeometryKey).toByteArray());
@@ -91,8 +94,6 @@ void MainWindow::loadSettings()
     for (const auto& dock: m_docks) {
         dock->loadSettings();
     }
-
-    m_configs->loadSettings();
 }
 
 void MainWindow::saveSettings() const
@@ -217,7 +218,7 @@ void MainWindow::setupWidgets()
     addToolBar(Qt::TopToolBarArea, app_tool_bar);
 
     m_docks << new PenInfoDockWidget(m_config, pen_info, this);
-    m_docks << new PenConfigQuickDockWidget(m_configs, this);
+    m_docks << new PenConfigDockWidget(m_configs, this);
     m_docks << new PressureHistogramDockWidget(m_config, pen_info, this);
     m_docks << new PressureHistoryDockWidget(m_config, pen_info, this);
 

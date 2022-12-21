@@ -19,16 +19,35 @@
 
 #pragma once
 
-#include "quickdockwidget.h"
+#include "dockwidget.h"
 
+namespace Ui {
+class PenConfigDockWidget;
+}
+
+class PenConfig;
 class PenConfigModel;
 
-class PenConfigQuickDockWidget : public QuickDockWidget
+class PenConfigDockWidget : public DockWidget
 {
+    Q_OBJECT
+
 public:
-    explicit PenConfigQuickDockWidget(PenConfigModel* penConfigModel, QWidget* parent = nullptr);
+    explicit PenConfigDockWidget(PenConfigModel* penConfigModel, QWidget *parent = nullptr);
+    ~PenConfigDockWidget();
+
+    void saveSettings() const override;
+    void loadSettings() override;
 
 private:
-    QAction* m_addConfigAction {nullptr};
-    QAction* m_removeConfiAction {nullptr};
+    int selectedPenConfigIndex() const;
+    PenConfig* selectedPenConfig() const;
+    void selectPenConfig(int index);
+    void updateConfigInfo();
+    void appendConfig();
+    void removeSelectedConfig();
+
+    Ui::PenConfigDockWidget *m_ui;
+    PenConfigModel* m_penConfigModel = nullptr;
 };
+

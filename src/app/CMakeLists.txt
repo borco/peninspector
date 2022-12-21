@@ -11,10 +11,11 @@ set(PROJECT_SOURCES
     mainwindow.h
     penconfig.cpp
     penconfig.h
+    penconfigdockwidget.cpp
+    penconfigdockwidget.h
+    penconfigdockwidget.ui
     penconfigmodel.cpp
     penconfigmodel.h
-    penconfigquickdockwidget.cpp
-    penconfigquickdockwidget.h
     peninfo.cpp
     peninfo.h
     peninfodockwidget.cpp
@@ -28,8 +29,6 @@ set(PROJECT_SOURCES
     pressurehistorydockwidget.h
     pressurehistorymodel.cpp
     pressurehistorymodel.h
-    quickdockwidget.cpp
-    quickdockwidget.h
     tiltpreview.cpp
     tiltpreview.h
 )

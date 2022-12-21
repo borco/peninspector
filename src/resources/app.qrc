@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>qml/PenConfig.qml</file>
         <file>icons/dock-float.svg</file>
         <file>icons/dock-close.svg</file>
         <file>icons/config-add.svg</file>

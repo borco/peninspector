@@ -32,7 +32,8 @@ class PenConfigModel : public QAbstractListModel
 public:
     enum ModelRoles {
         NameRole = Qt::UserRole + 1,
-        ConfigRole,
+        PressureLevelsRole,
+        TiltRole,
     };
 
     explicit PenConfigModel(QObject *parent = nullptr);
@@ -40,11 +41,10 @@ public:
 
     int size() const { return m_configs.size(); }
 
-    QHash<int, QByteArray> roleNames() const override;
-
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
