@@ -33,13 +33,19 @@ References:
 * the **Pressure History** dock will show the actual pressure level as you draw in the canvas area
 * copy the chart images to clipboard using **Copy Chart** buttons from the *Pressure Histogram* or *Pressure History* docks' toolbars
 
+### Canvas Area
+
+* pen data is received only while inside this area
+* use **Clear** button to clear the canvas area
+
 ### Pen Config Dock
 
-* set a name so that you can identify your pen in the top toolbar
-* the *pressure levels* is used by the **Pressure Histogram** to determine possible bucket values (stylus pressure is reported by Qt as a real number between 0.0 and 1.0)
+* set a **Name** so that you can identify your pen in the top toolbar
+* the **Pressure Levels** is used by the **Pressure Histogram** to determine possible bucket values (stylus pressure is reported by Qt as a real number between 0.0 and 1.0)
 * use the **Plus** button to add a new config to the end of the config list
 * use the **Minus** button to remove the **selected** configuration
 * when the app starts the first time or finds no configured pen on start, a default pen (XPPen Deco LW) will be created
+* for now, the **Maximum Tilt Angle** is used by the **Pen InfoDock** to display the tilt
 
 ![pen config](docs/pen_config_dock.png)
 
@@ -58,8 +64,10 @@ References:
   * Level: the level, based on the total number of pressure configured for the current pen
   * Count: how many times this pressure/level was reported
 * use the separator between the histogram and the table to set their widths
-* use the **Clear** button to clear the chart
 * use the **Copy Chart** button to copy the chart to clipboard
+* use the **Clear** button to clear the chart
+* set a **Window Size** to limit the histogram to the a specific data set
+  * **All** will use all pressure data to compute the histogram
 
 ![pressure histogram](docs/pressure_histogram_dock.png)
 
@@ -72,8 +80,9 @@ References:
   * Pressure: the actual pressure value reported by the operating system
   * Level: the level, based on the total number of pressure configured for the current pen
 * use the separator between the histogram and the table to set their widths
-* use the **Clear** button to clear the chart
 * use the **Copy Chart** button to copy the chart to clipboard
+* use the **Clear** button to clear the chart
+* set a **Window Size** to limit the history to the a specific data set
 
 ![pressure history](docs/pressure_history_dock.png)
 
