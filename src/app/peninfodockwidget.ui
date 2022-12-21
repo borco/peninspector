@@ -7,12 +7,12 @@
     <x>0</x>
     <y>0</y>
     <width>359</width>
-    <height>406</height>
+    <height>472</height>
    </rect>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="12" column="0">
+    <item row="13" column="0">
      <widget class="QLabel" name="label_9">
       <property name="styleSheet">
        <string notr="true">QLabel {font-weight: 200;}</string>
@@ -87,7 +87,7 @@
       </property>
      </widget>
     </item>
-    <item row="13" column="0">
+    <item row="14" column="0">
      <widget class="QLabel" name="label_17">
       <property name="styleSheet">
        <string notr="true">QLabel {font-weight: 200;}</string>
@@ -126,7 +126,7 @@
       </property>
      </widget>
     </item>
-    <item row="11" column="0" colspan="2">
+    <item row="12" column="0" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="Line" name="line_10">
@@ -230,7 +230,7 @@
       </property>
      </widget>
     </item>
-    <item row="14" column="0" colspan="2">
+    <item row="15" column="0" colspan="2">
      <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -284,7 +284,7 @@
       </property>
      </widget>
     </item>
-    <item row="13" column="1">
+    <item row="14" column="1">
      <widget class="QLabel" name="z">
       <property name="text">
        <string/>
@@ -364,16 +364,34 @@
       </property>
      </widget>
     </item>
-    <item row="12" column="1">
+    <item row="13" column="1">
      <widget class="QLabel" name="rotation">
       <property name="text">
        <string/>
       </property>
      </widget>
     </item>
+    <item row="11" column="0" colspan="2">
+     <widget class="TiltPreview" name="tiltPreview" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>80</height>
+       </size>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TiltPreview</class>
+   <extends>QWidget</extends>
+   <header>tiltpreview.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
