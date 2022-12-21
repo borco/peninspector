@@ -153,7 +153,7 @@ void PressureHistogramDockWidget::setupToolBarActions()
 
     addToolBarLabel(tr("Window Size:"));
 
-    QList<int> window_sizes = {20, 40, 100, 200, -1};
+    QList<int> window_sizes = {10, 20, 40, 100, 200, -1};
 
     for (int window_size: window_sizes) {
         action = new QAction(this);
@@ -171,6 +171,7 @@ void PressureHistogramDockWidget::setupToolBarActions()
 void PressureHistogramDockWidget::setupWidgets()
 {
     m_xAxis->setLabelFormat("%i");
+    m_yAxis->setVisible(false);
 
     m_chart->layout()->setContentsMargins(0, 0, 0, 0);
     m_chart->setBackgroundRoundness(0);
@@ -185,7 +186,10 @@ void PressureHistogramDockWidget::setupWidgets()
         updateTitle();
     });
 
-    connect(m_pressureHistogramModel, &PressureHistogramModel::modelReset, this, &PressureHistogramDockWidget::updateHistogram);
+    connect(m_pressureHistogramModel, &PressureHistogramModel::modelReset, this, [this]() {
+        updateHistogram();
+        updateTitle();
+    });
 
     connect(m_info, &PenInfo::pressureChanged, this, [this]() {
         m_pressureHistogramModel->addPressure(m_info->pressure());
