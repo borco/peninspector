@@ -150,7 +150,7 @@ void PressureHistogramDockWidget::loadSettings()
     QSettings settings;
     settings.beginGroup(SettingsGroupKey);
     m_splitter->restoreState(settings.value(SplitterStateKey).toByteArray());
-    setHistogramWindowSize(settings.value(WindowSizeKey, -1).toInt());
+    setHistogramWindowSize(settings.value(WindowSizeKey, 20).toInt());
     settings.endGroup();
 }
 
@@ -187,7 +187,7 @@ void PressureHistogramDockWidget::setupToolBarActions()
         addToolBarAction(action);
     }
 
-    setHistogramWindowSize(20);
+    setHistogramWindowSize(-1);
 }
 
 void PressureHistogramDockWidget::setupWidgets()
