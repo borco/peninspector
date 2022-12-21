@@ -43,6 +43,7 @@ private:
     void setupToolBarActions();
     void setupWidgets();
     void updateHistogram();
+    void setHistogramWindowSize(int windowSize);
     void updateTitle();
     void copyChartToClipboard();
     void saveChartToDisk();
@@ -57,4 +58,7 @@ private:
 
     PressureHistogramModel* m_pressureHistogramModel {nullptr};
     QSplitter* m_splitter {nullptr};
+
+    QList<QAction*> m_windowSizeActions;
+    QActionGroup* m_windowSizeActionGroup = nullptr;
 };

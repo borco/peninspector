@@ -27,8 +27,6 @@ class PressureHistogramModel : public QAbstractTableModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(int size READ size NOTIFY sizeChanged)
-
 public:
     enum Columns: int {
         ValueColumn = 0,
@@ -52,13 +50,25 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    int size() { return m_pressures.size(); }
-    const Pressure& operator[](int index) const { return m_pressures[index]; }
+    const Pressure& operator[](int index) const { return m_histogram[index]; }
+    int histogramSize() const { return m_histogram.size(); }
+    int totalLevels() const { return m_totalLevels.size(); }
+
+    int windowSize() const { return m_windowSize; }
+    void setWindowSize(int newWindowSize);
 
 signals:
-    void sizeChanged();
+    void histogramSizeChanged();
+    void totalLevelsChanged();
+    void windowSizeChanged();
 
 private:
-    PenConfig* m_config {nullptr};
-    QList<Pressure> m_pressures;
+    void insertPressure(int index, const Pressure& pressure);
+    void removePressuresOutsideWindow();
+
+    PenConfig* m_config = nullptr;
+    QSet<int> m_totalLevels;
+    QList<Pressure> m_histogram;
+    QList<int> m_windowLevels;
+    int m_windowSize = -1;
 };

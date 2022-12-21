@@ -130,6 +130,8 @@ void PressureHistoryDockWidget::setupWidgets()
     table_view->setModel(m_pressureHistoryModel);
     m_splitter->addWidget(table_view);
 
+    m_splitter->setSizes(QList<int>() << 1 << 0);
+
     setWidget(m_splitter);
 }
 
