@@ -20,8 +20,6 @@ set(PROJECT_SOURCES
     peninfodockwidget.cpp
     peninfodockwidget.h
     peninfodockwidget.ui
-    peninfoquickdockwidget.cpp
-    peninfoquickdockwidget.h
     pressurehistogramdockwidget.cpp
     pressurehistogramdockwidget.h
     pressurehistogrammodel.cpp
@@ -32,6 +30,8 @@ set(PROJECT_SOURCES
     pressurehistorymodel.h
     quickdockwidget.cpp
     quickdockwidget.h
+    tiltpreview.cpp
+    tiltpreview.h
 )
 
 # The MACOSX_BUNDLE_ICON_FILE variable is added to the Info.plist
