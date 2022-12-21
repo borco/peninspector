@@ -217,17 +217,30 @@ void MainWindow::setupWidgets()
     app_tool_bar->setMovable(false);
     addToolBar(Qt::TopToolBarArea, app_tool_bar);
 
-    m_docks << new PenInfoDockWidget(m_config, pen_info, this);
-    m_docks << new PenConfigDockWidget(m_configs, this);
-    m_docks << new PressureHistogramDockWidget(m_config, pen_info, this);
-    m_docks << new PressureHistoryDockWidget(m_config, pen_info, this);
+    auto pen_info_dock = new PenInfoDockWidget(m_config, pen_info, this);
+    addDockWidget(Qt::LeftDockWidgetArea, pen_info_dock);
+    m_docks << pen_info_dock;
+
+    auto pen_config_dock = new PenConfigDockWidget(m_configs, this);
+    addDockWidget(Qt::LeftDockWidgetArea, pen_config_dock);
+    m_docks << pen_config_dock;
+
+    auto pressure_histogram_dock = new PressureHistogramDockWidget(m_config, pen_info, this);
+    addDockWidget(Qt::TopDockWidgetArea, pressure_histogram_dock);
+    m_docks << pressure_histogram_dock;
+
+    auto pressure_history_dock = new PressureHistoryDockWidget(m_config, pen_info, this);
+    addDockWidget(Qt::TopDockWidgetArea, pressure_history_dock);
+    m_docks << pressure_history_dock;
+
+    splitDockWidget(pen_info_dock, pen_config_dock, Qt::Horizontal);
+    splitDockWidget(pressure_histogram_dock, pressure_history_dock, Qt::Vertical);
 
     for (const auto& dock: m_docks) {
         dock->configure();
         auto action = dock->toggleViewAction();
         windows_menu->addAction(action);
         app_tool_bar->addAction(action);
-        addDockWidget(Qt::LeftDockWidgetArea, dock);
     }
 
     app_tool_bar->addSeparator();
