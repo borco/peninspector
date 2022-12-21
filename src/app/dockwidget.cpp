@@ -57,6 +57,13 @@ void DockWidget::addToolBarAction(QAction *action)
     m_toolBar->insertAction(m_spacerAction, action);
 }
 
+void DockWidget::addToolBarLabel(const QString &text)
+{
+    auto label = new QLabel(text, this);
+    label->setStyleSheet("QLabel{font-weight: 200; font-size: 10px;}");
+    m_toolBar->insertWidget(m_spacerAction, label);
+}
+
 QAction *DockWidget::addToolBarSeparator()
 {
     return m_toolBar->insertSeparator(m_spacerAction);

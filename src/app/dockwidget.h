@@ -36,6 +36,7 @@ public:
 
 protected:
     void addToolBarAction(QAction* action);
+    void addToolBarLabel(const QString& text);
     QAction *addToolBarSeparator();
 
 private:
