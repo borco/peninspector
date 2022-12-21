@@ -82,18 +82,18 @@ public:
     qreal tiltRotation() const { return m_tiltRotation; }
 
 signals:
-    void deviceIdChanged();
-    void deviceTypeChanged();
-    void pointerTypeChanged();
-    void pressureChanged();
-    void rotationChanged();
-    void tangentialPressureChanged();
-    void xTiltChanged();
-    void yTiltChanged();
-    void zChanged();
+    void deviceIdChanged(qint64 value);
+    void deviceTypeChanged(int value);
+    void pointerTypeChanged(int value);
+    void pressureChanged(qreal value);
+    void rotationChanged(qreal value);
+    void tangentialPressureChanged(qreal value);
+    void xTiltChanged(qreal value);
+    void yTiltChanged(qreal value);
+    void zChanged(qreal value);
 
-    void tiltAngleChanged();
-    void tiltRotationChanged();
+    void tiltAngleChanged(qreal value);
+    void tiltRotationChanged(qreal value);
 
 private:
     void updateTilt();
