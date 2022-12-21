@@ -75,7 +75,7 @@ qt_finalize_executable(${APP_NAME})
 
 add_custom_target(${APP_NAME}_macdeployqt
     DEPENDS ${APP_NAME}
-    COMMAND ${MACDEPLOYQT_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.app -qmldir="${CMAKE_SOURCE_DIR}/src/resources/qml"
+    COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.app"
 )
 
 add_custom_target(${APP_NAME}_create_dmg
