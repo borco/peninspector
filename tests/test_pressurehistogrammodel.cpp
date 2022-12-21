@@ -102,9 +102,9 @@ private slots:
             int count = histogram[i].second;
             qreal value = level * delta;
 
-            QCOMPARE(model[i].level, level);
-            QCOMPARE(model[i].value, value);
-            QCOMPARE(model[i].count, count);
+            QCOMPARE(model.at(i).level, level);
+            QCOMPARE(model.at(i).value, value);
+            QCOMPARE(model.at(i).count, count);
         }
     }
 };
