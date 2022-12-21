@@ -23,6 +23,7 @@
 #include "peninfo.h"
 #include "pressurehistogrammodel.h"
 
+#include <QActionGroup>
 #include <QChart>
 #include <QChartView>
 #include <QClipboard>
@@ -65,33 +66,33 @@ PressureHistogramDockWidget::~PressureHistogramDockWidget()
 
 void PressureHistogramDockWidget::updateHistogram()
 {
-        const auto levels = m_config->pressureLevels();
+    const auto levels = m_config->pressureLevels();
 
-        auto series = new QLineSeries();
+    auto series = new QLineSeries();
 
-        int data[levels];
-        std::memset(data, 0, sizeof data);
+    int data[levels];
+    std::memset(data, 0, sizeof data);
 
-        for (int i = 0; i < m_pressureHistogramModel->size(); ++i) {
-            const auto pressure = (*m_pressureHistogramModel)[i];
-            int index = pressure.value * levels;
-            data[index] += pressure.count;
-        }
+    for (int i = 0; i < m_pressureHistogramModel->size(); ++i) {
+        const auto pressure = (*m_pressureHistogramModel)[i];
+        int index = pressure.value * levels;
+        data[index] += pressure.count;
+    }
 
-        int max_count {0};
-        for (int i = 0; i < levels; ++i) {
-            series->append(QPoint(i, data[i]));
-            max_count = qMax(max_count, data[i]);
-        }
+    int max_count {0};
+    for (int i = 0; i < levels; ++i) {
+        series->append(QPoint(i, data[i]));
+        max_count = qMax(max_count, data[i]);
+    }
 
-        m_chart->removeAllSeries();
-        m_chart->addSeries(series);
+    m_chart->removeAllSeries();
+    m_chart->addSeries(series);
 
-        m_xAxis->setRange(0, levels);
-        series->attachAxis(m_xAxis);
+    m_xAxis->setRange(0, levels);
+    series->attachAxis(m_xAxis);
 
-        m_yAxis->setRange(0, max_count);
-        series->attachAxis(m_yAxis);
+    m_yAxis->setRange(0, max_count);
+    series->attachAxis(m_yAxis);
 }
 
 void PressureHistogramDockWidget::updateTitle()
@@ -135,15 +136,34 @@ void PressureHistogramDockWidget::setupToolBarActions()
     addToolBarSeparator();
 
     auto action = new QAction(this);
+    action->setText(tr("Copy Chart"));
+    connect(action, &QAction::triggered, this, &PressureHistogramDockWidget::copyChartToClipboard);
+    addToolBarAction(action);
+
+    addToolBarSeparator();
+
+    action = new QAction(this);
     action->setText(tr("Clear"));
     connect(action, &QAction::triggered, m_pressureHistogramModel, &PressureHistogramModel::clear);
     addToolBarAction(action);
 
+    addToolBarSeparator();
 
-    action = new QAction(this);
-    action->setText(tr("Copy Chart"));
-    connect(action, &QAction::triggered, this, &PressureHistogramDockWidget::copyChartToClipboard);
-    addToolBarAction(action);
+    addToolBarLabel(tr("Window Size:"));
+
+    QList<int> window_sizes = {20, 40, 100, 200, -1};
+
+    auto action_group = new QActionGroup(this);
+    for (int window_size: window_sizes) {
+        action = new QAction(this);
+        action->setText(window_size > 0 ? QString::number(window_size) : tr("All"));
+        action->setCheckable(true);
+        action_group->addAction(action);
+        m_windowSizeActions << action;
+        addToolBarAction(action);
+    }
+
+    m_windowSizeActions.last()->setChecked(true);
 }
 
 void PressureHistogramDockWidget::setupWidgets()
@@ -181,6 +201,8 @@ void PressureHistogramDockWidget::setupWidgets()
     table_view->setFrameShape(QFrame::NoFrame);
     table_view->setModel(m_pressureHistogramModel);
     m_splitter->addWidget(table_view);
+
+    m_splitter->setSizes(QList<int>() << 1 << 0);
 
     setWidget(m_splitter);
 }

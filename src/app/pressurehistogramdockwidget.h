@@ -57,4 +57,6 @@ private:
 
     PressureHistogramModel* m_pressureHistogramModel {nullptr};
     QSplitter* m_splitter {nullptr};
+
+    QList<QAction*> m_windowSizeActions;
 };
