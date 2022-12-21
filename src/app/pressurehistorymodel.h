@@ -27,8 +27,6 @@ class PressureHistoryModel : public QAbstractTableModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(int size READ size WRITE setSize NOTIFY sizeChanged)
-
 public:
     enum Columns: int {
         IndexColumn = 0,
@@ -52,17 +50,20 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    int size() { return m_size; }
-    void setSize(int newSize);
+    int windowSize() { return m_windowSize; }
+    void setWindowSize(int newSize);
 
+    int size() const { return m_pressures.size(); }
+    const Pressure& first() const { return m_pressures.first(); }
+    const Pressure& last() const { return m_pressures.last(); }
     const Pressure& at(int index) const { return m_pressures[index]; }
 
 signals:
-    void sizeChanged();
+    void windowSizeChanged();
 
 private:
     PenConfig* m_config {nullptr};
-    int m_size {200};
+    int m_windowSize {200};
     int m_currentIndex {0};
     QVector<Pressure> m_pressures;
 };

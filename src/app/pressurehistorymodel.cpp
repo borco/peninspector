@@ -26,18 +26,17 @@ PressureHistoryModel::PressureHistoryModel(PenConfig *config, QObject *parent)
     , m_config(config)
 {
     connect(m_config, &PenConfig::pressureLevelsChanged, this, &PressureHistoryModel::clear);
-
-    m_pressures.resize(m_size);
-    m_currentIndex = m_size - 1;
+    clear();
 }
 
 void PressureHistoryModel::clear()
 {
     beginResetModel();
-    for (int i = 0; i < m_size; ++i) {
-        m_pressures[i] = Pressure{0.0, 0, i};
+    m_pressures.resize(m_windowSize + 1);
+    for (int i = 0; i < m_pressures.size(); ++i) {
+        m_pressures[i] = {0.0, 0, i};
     }
-    m_currentIndex = m_size - 1;
+    m_currentIndex = m_pressures.size() - 1;
     endResetModel();
 }
 
@@ -47,11 +46,11 @@ void PressureHistoryModel::addPressure(qreal pressure)
         return;
 
     beginResetModel();
-    for (int i = 0; i < m_size - 1; ++i) {
+    for (int i = 0; i < m_pressures.size() - 1; ++i) {
         m_pressures[i] = m_pressures[i+1];
     }
     int level = pressure * m_config->pressureLevels();
-    m_pressures[m_size - 1] = Pressure{pressure, level, ++m_currentIndex};
+    m_pressures[m_pressures.size() - 1] = Pressure{pressure, level, ++m_currentIndex};
     endResetModel();
 }
 
@@ -97,32 +96,13 @@ QVariant PressureHistoryModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-void PressureHistoryModel::setSize(int newSize)
+void PressureHistoryModel::setWindowSize(int newSize)
 {
-    if (m_size != newSize)
+    if (m_windowSize == newSize)
         return;
 
-    int oldSize = m_size;
-    m_size = newSize;
-
-    beginResetModel();
-    if (oldSize > newSize) {
-        int delta = oldSize - newSize;
-        for (int i = 0; i < newSize; ++i) {
-            m_pressures[i] = m_pressures[i + delta];
-        }
-        m_pressures.resize(newSize);
-    } else {
-        m_pressures.resize(newSize);
-        int delta = newSize - oldSize;
-        for (int i = newSize - 1; i >= delta; --i) {
-            m_pressures[i] = m_pressures[i - delta];
-        }
-
-        for (int i = delta - 1, index = m_pressures[delta].index; i >= 0; --i, --index) {
-            m_pressures[i] = Pressure{0.0, 0, index};
-        }
-    }
-    endResetModel();
-    emit sizeChanged();
+    m_windowSize = newSize;
+    clear();
+//    qDebug() << "New pressure history window size:" << m_windowSize;
+    emit windowSizeChanged();
 }

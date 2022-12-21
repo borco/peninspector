@@ -43,6 +43,7 @@ private:
     void setupToolBarActions();
     void setupWidgets();
     void updateHistory();
+    void setHistoryWindowSize(int windowSize);
     void updateTitle();
     void copyChartToClipboard();
 //    void saveChartToDisk();
@@ -57,5 +58,8 @@ private:
 
     PressureHistoryModel* m_pressureHistoryModel {nullptr};
     QSplitter* m_splitter {nullptr};
+
+    QList<QAction*> m_windowSizeActions;
+    QActionGroup* m_windowSizeActionGroup = nullptr;
 };
 

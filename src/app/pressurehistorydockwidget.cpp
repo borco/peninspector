@@ -23,6 +23,7 @@
 #include "peninfo.h"
 #include "pressurehistorymodel.h"
 
+#include <QActionGroup>
 #include <QChart>
 #include <QChartView>
 #include <QClipboard>
@@ -39,6 +40,7 @@
 namespace {
 static const char* SettingsGroupKey { "PressureHistoryDock" };
 static const char* SplitterStateKey {"splitterState"};
+static const char* WindowSizeKey {"windowSize"};
 }
 
 PressureHistoryDockWidget::PressureHistoryDockWidget(PenConfig *penConfig, PenInfo *penInfo, QWidget *parent)
@@ -51,6 +53,7 @@ PressureHistoryDockWidget::PressureHistoryDockWidget(PenConfig *penConfig, PenIn
     , m_xAxis(new QValueAxis())
     , m_yAxis(new QValueAxis())
     , m_pressureHistoryModel(new PressureHistoryModel(penConfig, this))
+    , m_windowSizeActionGroup(new QActionGroup(this))
 {
     setupToolBarActions();
     setupWidgets();
@@ -60,6 +63,7 @@ PressureHistoryDockWidget::PressureHistoryDockWidget(PenConfig *penConfig, PenIn
 PressureHistoryDockWidget::~PressureHistoryDockWidget()
 {
     delete m_chart;
+    delete m_pressureHistoryModel;
 }
 
 void PressureHistoryDockWidget::saveSettings() const
@@ -67,6 +71,7 @@ void PressureHistoryDockWidget::saveSettings() const
     QSettings settings;
     settings.beginGroup(SettingsGroupKey);
     settings.setValue(SplitterStateKey, m_splitter->saveState());
+    settings.setValue(WindowSizeKey, m_pressureHistoryModel->windowSize());
     settings.endGroup();
 }
 
@@ -75,6 +80,7 @@ void PressureHistoryDockWidget::loadSettings()
     QSettings settings;
     settings.beginGroup(SettingsGroupKey);
     m_splitter->restoreState(settings.value(SplitterStateKey).toByteArray());
+    setHistoryWindowSize(settings.value(WindowSizeKey, 20).toInt());
     settings.endGroup();
 }
 
@@ -83,19 +89,40 @@ void PressureHistoryDockWidget::setupToolBarActions()
     addToolBarSeparator();
 
     auto action = new QAction(this);
-    action->setText(tr("Clear"));
-    connect(action, &QAction::triggered, m_pressureHistoryModel, &PressureHistoryModel::clear);
-    addToolBarAction(action);
-
-    action = new QAction(this);
     action->setText(tr("Copy Chart"));
     connect(action, &QAction::triggered, this, &PressureHistoryDockWidget::copyChartToClipboard);
     addToolBarAction(action);
 
-//    action = new QAction(this);
-//    action->setText(tr("Save Chart"));
-//    connect(action, &QAction::triggered, this, &PressureHistoryDockWidget::saveChartToDisk);
-//    addToolBarAction(action);
+    //    action = new QAction(this);
+    //    action->setText(tr("Save Chart"));
+    //    connect(action, &QAction::triggered, this, &PressureHistoryDockWidget::saveChartToDisk);
+    //    addToolBarAction(action);
+
+    addToolBarSeparator();
+
+    action = new QAction(this);
+    action->setText(tr("Clear"));
+    connect(action, &QAction::triggered, m_pressureHistoryModel, &PressureHistoryModel::clear);
+    addToolBarAction(action);
+
+    addToolBarSeparator();
+
+    addToolBarLabel(tr("Window Size:"));
+
+    QList<int> window_sizes = {10, 20, 40, 100, 200, 400};
+
+    for (int window_size: window_sizes) {
+        action = new QAction(this);
+        action->setData(window_size);
+        action->setText(window_size > 0 ? QString::number(window_size) : tr("All"));
+        action->setCheckable(true);
+        connect(action, &QAction::triggered, this, [this, window_size]() { m_pressureHistoryModel->setWindowSize(window_size); });
+        m_windowSizeActionGroup->addAction(action);
+        m_windowSizeActions << action;
+        addToolBarAction(action);
+    }
+
+    setHistoryWindowSize(window_sizes.last());
 }
 
 void PressureHistoryDockWidget::setupWidgets()
@@ -115,6 +142,9 @@ void PressureHistoryDockWidget::setupWidgets()
     updateTitle();
 
     connect(m_pressureHistoryModel, &PressureHistoryModel::modelReset, this, &PressureHistoryDockWidget::updateHistory);
+
+    connect(m_pressureHistoryModel, &PressureHistoryModel::windowSizeChanged, this, &PressureHistoryDockWidget::updateHistory);
+
     connect(m_info, &PenInfo::pressureChanged, this, [this]() {
         m_pressureHistoryModel->addPressure(m_info->pressure());
     });
@@ -142,19 +172,33 @@ void PressureHistoryDockWidget::updateHistory()
     for (int i = 0; i < m_pressureHistoryModel->size(); ++i) {
         const auto pressure = m_pressureHistoryModel->at(i);
         series->append(QPointF(pressure.index, pressure.level));
+        series->append(QPointF(pressure.index + 1, pressure.level));
     }
 
     m_chart->removeAllSeries();
     m_chart->addSeries(series);
 
-    if (m_pressureHistoryModel->size() > 0) {
-        m_xAxis->setRange(m_pressureHistoryModel->at(0).index,
-                          m_pressureHistoryModel->at(m_pressureHistoryModel->size() - 1).index);
-    }
+    m_xAxis->setRange(m_pressureHistoryModel->first().index, m_pressureHistoryModel->last().index);
     series->attachAxis(m_xAxis);
 
     m_yAxis->setRange(0, m_config->pressureLevels());
     series->attachAxis(m_yAxis);
+}
+
+void PressureHistoryDockWidget::setHistoryWindowSize(int windowSize)
+{
+    for (const auto& action: m_windowSizeActions) {
+        auto action_window_size = action->data().toInt();
+        if (action_window_size == windowSize) {
+            action->setChecked(true);
+            m_pressureHistoryModel->setWindowSize(windowSize);
+            return;
+        }
+    }
+
+    const auto& action = m_windowSizeActions.last();
+    action->setChecked(true);
+    m_pressureHistoryModel->setWindowSize(action->data().toInt());
 }
 
 void PressureHistoryDockWidget::updateTitle()
