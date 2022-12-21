@@ -12,6 +12,16 @@ class TestPressureHistogramModel: public QObject
     typedef QList<QIntPair> QIntPairList;
 
 private slots:
+    void addPressureMinimumSensitivity_data() {
+        QTest::addColumn<int>("pressureLevels");
+        QTest::addColumn<int>("windowSize");
+
+        QTest::newRow("levels: 8192 * 8, window: 2") << 8192 * 8 << 2;
+        QTest::newRow("levels: 8192 * 8, window: 20") << 8192 * 8 << 20;
+        QTest::newRow("levels: 8192 * 8, window: 200") << 8192 * 8 << 200;
+        QTest::newRow("levels: 8192 * 8, window: -1") << 8192 * 8 << -1;
+    }
+
     void addPressureMinimumSensitivity() {
         // 8192 is the maximum currently available
         // we verify we can detect 8x more levels
@@ -28,7 +38,7 @@ private slots:
             model.addPressure(i * delta);
         }
 
-        QCOMPARE(model.uniqueLevels(), levels);
+        QCOMPARE(model.totalLevels(), levels);
     }
 
     void addPressureLevelAndCount_data() {

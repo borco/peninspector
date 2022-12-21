@@ -74,7 +74,7 @@ void PressureHistogramDockWidget::updateHistogram()
     int data[levels];
     std::memset(data, 0, sizeof data);
 
-    for (int i = 0; i < m_pressureHistogramModel->size(); ++i) {
+    for (int i = 0; i < m_pressureHistogramModel->histogramSize(); ++i) {
         const auto pressure = (*m_pressureHistogramModel)[i];
         int index = pressure.value * levels;
         data[index] += pressure.count;
@@ -98,10 +98,11 @@ void PressureHistogramDockWidget::updateHistogram()
 
 void PressureHistogramDockWidget::updateTitle()
 {
-    m_chart->setTitle(tr("<center><b>Pressure Histogram | %1</b><br>pressure levels: %2, detected levels: %3</center>")
-                    .arg(m_config->name())
-                    .arg(m_config->pressureLevels())
-                    .arg(m_pressureHistogramModel->size())
+    m_chart->setTitle(tr("<center><b>Pressure Histogram | %1</b><br>pressure levels: %2, detected levels: %3, in window: %4</center>")
+                      .arg(m_config->name())
+                      .arg(m_config->pressureLevels())
+                      .arg(m_pressureHistogramModel->totalLevels())
+                      .arg(m_pressureHistogramModel->histogramSize())
                     );}
 
 void PressureHistogramDockWidget::copyChartToClipboard()

@@ -31,9 +31,12 @@ PressureHistogramModel::PressureHistogramModel(PenConfig *config, QObject *paren
 void PressureHistogramModel::clear()
 {
     beginResetModel();
-    m_pressures.clear();
+    m_windowLevels.clear();
+    m_totalLevels.clear();
+    m_histogram.clear();
+    emit totalLevelsChanged();
+    emit histogramSizeChanged();
     endResetModel();
-    emit sizeChanged();
 }
 
 void PressureHistogramModel::addPressure(qreal pressure)
@@ -43,37 +46,50 @@ void PressureHistogramModel::addPressure(qreal pressure)
         return;
 
     int level = pressure * m_config->pressureLevels();
+    m_totalLevels.insert(level);
+    m_windowLevels.append(level);
 
-    if (m_pressures.isEmpty()) {
-        beginInsertRows(QModelIndex(), 0, 0);
-        m_pressures.append({pressure, level, 1});
-        endInsertRows();
-    } else if (pressure < m_pressures[0].value) {
-        beginInsertRows(QModelIndex(), 0, 0);
-        m_pressures.insert(0, {pressure, level, 1});
-        endInsertRows();
-    } else if (pressure > m_pressures.last().value) {
-        beginInsertRows(QModelIndex(), m_pressures.size(), m_pressures.size());
-        m_pressures.append({pressure, level, 1});
+    QList<int> removed_levels;
+    if (m_windowSize > 0) {
+        while (!m_windowLevels.isEmpty() && m_windowLevels.size() > m_windowSize) {
+            removed_levels << m_windowLevels.takeFirst();
+        }
+    }
+
+    const qreal delta = 1.0 / m_config->pressureLevels();
+    auto it = std::lower_bound(m_histogram.begin(),
+                               m_histogram.end(),
+                               level,
+                               [](const Pressure& pressure, int level) { return pressure.level < level; });
+    int distance = (it - m_histogram.begin());
+    if (it == m_histogram.end() || it->level != level) {
+        beginInsertRows(QModelIndex(), distance, distance);
+        m_histogram.insert(distance, {level * delta, level, 1});
         endInsertRows();
     } else {
-        for (int i = 0; i < m_pressures.size(); ++i) {
-            if (qFuzzyCompare(m_pressures[i].value, pressure)) {
-                m_pressures[i].count += 1;
-                emit dataChanged(index(i, 0), index(i, 0));
-                break;
-            }
-            if (i < m_pressures.size() - 1) {
-                if (pressure > m_pressures[i].value && pressure < m_pressures[i+1].value) {
-                    beginInsertRows(QModelIndex(), i + 1, i + 1);
-                    m_pressures.insert(i + 1, {pressure, level, 1});
-                    endInsertRows();
-                }
+        it->count += 1;
+        emit dataChanged(index(distance, 0), index(distance, 0));
+    }
+
+    for (int level: removed_levels) {
+        auto it = std::find_if(m_histogram.begin(),
+                               m_histogram.end(),
+                               [level](const Pressure& pressure) { return pressure.level == level; });
+        int distance = (it - m_histogram.begin());
+        if (it != m_histogram.end()) {
+            it->count -= 1;
+            if (it->count <= 0) {
+                beginRemoveRows(QModelIndex(), distance, distance);
+                m_histogram.removeAt(distance);
+                endRemoveRows();
+            } else {
+                emit dataChanged(index(distance, 0), index(distance, 0));
             }
         }
     }
 
-    emit sizeChanged();
+    emit totalLevelsChanged();
+    emit histogramSizeChanged();
 }
 
 QVariant PressureHistogramModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -92,7 +108,7 @@ QVariant PressureHistogramModel::headerData(int section, Qt::Orientation orienta
 
 int PressureHistogramModel::rowCount(const QModelIndex &parent) const
 {
-    return m_pressures.size();
+    return m_histogram.size();
 }
 
 int PressureHistogramModel::columnCount(const QModelIndex &parent) const
@@ -107,13 +123,23 @@ QVariant PressureHistogramModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole) {
         switch(index.column()) {
-        case ValueColumn: return m_pressures[index.row()].value;
-        case LevelColumn: return m_pressures[index.row()].level;
-        case CountColumn: return m_pressures[index.row()].count;
+        case ValueColumn: return m_histogram[index.row()].value;
+        case LevelColumn: return m_histogram[index.row()].level;
+        case CountColumn: return m_histogram[index.row()].count;
         default:
             break;
         }
     }
 
     return QVariant();
+}
+
+void PressureHistogramModel::setWindowSize(int newWindowSize)
+{
+    if (m_windowSize == newWindowSize)
+        return;
+    m_windowSize = newWindowSize;
+    clear();
+//    qDebug() << "New histogram window:" << m_windowSize;
+    emit windowSizeChanged();
 }
