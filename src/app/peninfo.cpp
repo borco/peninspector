@@ -107,7 +107,7 @@ void PenInfo::setDeviceId(qint64 newDeviceId)
     if (m_deviceId == newDeviceId)
         return;
     m_deviceId = newDeviceId;
-    emit deviceIdChanged();
+    emit deviceIdChanged(m_deviceId);
 }
 
 void PenInfo::setDeviceType(int newDeviceType)
@@ -116,7 +116,7 @@ void PenInfo::setDeviceType(int newDeviceType)
         return;
     m_deviceType = newDeviceType;
     m_deviceTypeName = ::deviceTypeName(newDeviceType);
-    emit deviceTypeChanged();
+    emit deviceTypeChanged(m_deviceType);
 }
 
 void PenInfo::setPointerType(int newPointerType)
@@ -125,7 +125,7 @@ void PenInfo::setPointerType(int newPointerType)
         return;
     m_pointerType = newPointerType;
     m_pointerTypeName = ::pointerTypeName(newPointerType);
-    emit pointerTypeChanged();
+    emit pointerTypeChanged(m_pointerType);
 }
 
 void PenInfo::setPressure(qreal newPressure)
@@ -133,7 +133,7 @@ void PenInfo::setPressure(qreal newPressure)
     if (qFuzzyCompare(m_pressure, newPressure))
         return;
     m_pressure = newPressure;
-    emit pressureChanged();
+    emit pressureChanged(m_pressure);
 }
 
 void PenInfo::setRotation(qreal newRotation)
@@ -141,7 +141,7 @@ void PenInfo::setRotation(qreal newRotation)
     if (qFuzzyCompare(m_rotation, newRotation))
         return;
     m_rotation = newRotation;
-    emit rotationChanged();
+    emit rotationChanged(m_rotation);
 }
 
 void PenInfo::setTangentialPressure(qreal newTangentialPressure)
@@ -149,7 +149,7 @@ void PenInfo::setTangentialPressure(qreal newTangentialPressure)
     if (qFuzzyCompare(m_tangentialPressure, newTangentialPressure))
         return;
     m_tangentialPressure = newTangentialPressure;
-    emit tangentialPressureChanged();
+    emit tangentialPressureChanged(m_tangentialPressure);
 }
 
 void PenInfo::setXTilt(qreal newXTilt)
@@ -158,7 +158,7 @@ void PenInfo::setXTilt(qreal newXTilt)
         return;
     m_xTilt = newXTilt;
     updateTilt();
-    emit xTiltChanged();
+    emit xTiltChanged(m_xTilt);
 }
 
 void PenInfo::setYTilt(qreal newYTilt)
@@ -167,7 +167,7 @@ void PenInfo::setYTilt(qreal newYTilt)
         return;
     m_yTilt = newYTilt;
     updateTilt();
-    emit yTiltChanged();
+    emit yTiltChanged(m_yTilt);
 }
 
 void PenInfo::setZ(qreal newZ)
@@ -175,7 +175,7 @@ void PenInfo::setZ(qreal newZ)
     if (qFuzzyCompare(m_z, newZ))
         return;
     m_z = newZ;
-    emit zChanged();
+    emit zChanged(m_z);
 }
 
 void PenInfo::updateTilt()
@@ -195,7 +195,7 @@ void PenInfo::setTiltAngle(qreal newTiltAngle)
     if (qFuzzyCompare(m_tiltAngle, newTiltAngle))
         return;
     m_tiltAngle = newTiltAngle;
-    emit tiltAngleChanged();
+    emit tiltAngleChanged(m_tiltAngle);
 }
 
 void PenInfo::setTiltRotation(qreal newTiltRotation)
@@ -203,5 +203,5 @@ void PenInfo::setTiltRotation(qreal newTiltRotation)
     if (qFuzzyCompare(m_tiltRotation, newTiltRotation))
         return;
     m_tiltRotation = newTiltRotation;
-    emit tiltRotationChanged();
+    emit tiltRotationChanged(m_tiltRotation);
 }

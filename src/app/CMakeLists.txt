@@ -11,14 +11,16 @@ set(PROJECT_SOURCES
     mainwindow.h
     penconfig.cpp
     penconfig.h
+    penconfigdockwidget.cpp
+    penconfigdockwidget.h
+    penconfigdockwidget.ui
     penconfigmodel.cpp
     penconfigmodel.h
-    penconfigquickdockwidget.cpp
-    penconfigquickdockwidget.h
     peninfo.cpp
     peninfo.h
-    peninfoquickdockwidget.cpp
-    peninfoquickdockwidget.h
+    peninfodockwidget.cpp
+    peninfodockwidget.h
+    peninfodockwidget.ui
     pressurehistogramdockwidget.cpp
     pressurehistogramdockwidget.h
     pressurehistogrammodel.cpp
@@ -27,8 +29,8 @@ set(PROJECT_SOURCES
     pressurehistorydockwidget.h
     pressurehistorymodel.cpp
     pressurehistorymodel.h
-    quickdockwidget.cpp
-    quickdockwidget.h
+    tiltpreview.cpp
+    tiltpreview.h
 )
 
 # The MACOSX_BUNDLE_ICON_FILE variable is added to the Info.plist

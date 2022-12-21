@@ -53,13 +53,33 @@ QVariant PenConfigModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role == NameRole) {
+    if (role == NameRole || role == Qt::DisplayRole) {
         return m_configs[index.row()]->name();
-    } else if (role == ConfigRole) {
-        return QVariant::fromValue(m_configs[index.row()]);
     }
 
     return QVariant();
+}
+
+bool PenConfigModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (!index.isValid())
+        return false;
+
+    if (role == NameRole || role == Qt::DisplayRole) {
+        m_configs[index.row()]->setName(value.toString());
+        emit dataChanged(index, index, QList<int>() << role);
+        return true;
+    } else if (role == PressureLevelsRole) {
+        m_configs[index.row()]->setPressureLevels(value.toInt());
+        emit dataChanged(index, index, QList<int>() << role);
+        return true;
+    } else if (role == TiltRole) {
+        m_configs[index.row()]->setTilt(value.toFloat());
+        emit dataChanged(index, index, QList<int>() << role);
+        return true;
+    }
+
+    return false;
 }
 
 bool PenConfigModel::insertRows(int row, int count, const QModelIndex &parent)
@@ -151,12 +171,4 @@ void PenConfigModel::saveSettings()
         settings.setValue(ConfigKey, QVariant::fromValue(*(m_configs[i])));
     }
     settings.endArray();
-}
-
-QHash<int, QByteArray> PenConfigModel::roleNames() const
-{
-    QHash<int, QByteArray> roles;
-    roles[NameRole] = "name";
-    roles[ConfigRole] = "config";
-    return roles;
 }

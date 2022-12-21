@@ -19,13 +19,26 @@
 
 #pragma once
 
-#include "quickdockwidget.h"
+#include "dockwidget.h"
 
+namespace Ui {
+class PenInfoDockWidget;
+}
+
+class PenConfig;
 class PenInfo;
 
-class PenInfoQuickDockWidget : public QuickDockWidget
+class PenInfoDockWidget : public DockWidget
 {
     Q_OBJECT
+
 public:
-    explicit PenInfoQuickDockWidget(PenInfo* penInfo, QWidget* parent = nullptr);
+    explicit PenInfoDockWidget(PenConfig* penConfig, PenInfo* penInfo, QWidget *parent = nullptr);
+    ~PenInfoDockWidget();
+
+private:
+    Ui::PenInfoDockWidget *m_ui {nullptr};
+    PenConfig* m_penConfig {nullptr};
+    PenInfo* m_penInfo {nullptr};
 };
+
