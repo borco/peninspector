@@ -17,6 +17,9 @@ set(PROJECT_SOURCES
     penconfigquickdockwidget.h
     peninfo.cpp
     peninfo.h
+    peninfodockwidget.cpp
+    peninfodockwidget.h
+    peninfodockwidget.ui
     peninfoquickdockwidget.cpp
     peninfoquickdockwidget.h
     pressurehistogramdockwidget.cpp

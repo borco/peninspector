@@ -23,6 +23,7 @@
 #include "penconfig.h"
 #include "penconfigmodel.h"
 #include "penconfigquickdockwidget.h"
+#include "peninfodockwidget.h"
 #include "peninfoquickdockwidget.h"
 #include "pressurehistogramdockwidget.h"
 #include "pressurehistorydockwidget.h"
@@ -217,6 +218,7 @@ void MainWindow::setupWidgets()
     addToolBar(Qt::TopToolBarArea, app_tool_bar);
 
     m_docks << new PenInfoQuickDockWidget(pen_info, this);
+    m_docks << new PenInfoDockWidget(pen_info, this);
     m_docks << new PenConfigQuickDockWidget(m_configs, this);
     m_docks << new PressureHistogramDockWidget(m_config, pen_info, this);
     m_docks << new PressureHistoryDockWidget(m_config, pen_info, this);
