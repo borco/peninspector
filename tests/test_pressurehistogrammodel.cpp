@@ -16,55 +16,84 @@ private slots:
         // 8192 is the maximum currently available
         // we verify we can detect 8x more levels
         const int levels = 8192 * 8;
-
+        const int window_size = 20;
         const qreal delta = 1.0 / levels;
 
         PenConfig config;
         config.setPressureLevels(levels);
         PressureHistogramModel model(&config);
+        model.setWindowSize(window_size);
 
         for (int i = 0; i <= levels; ++i) {
             model.addPressure(i * delta);
         }
 
-        QCOMPARE(model.size(), levels);
+        QCOMPARE(model.uniqueLevels(), levels);
     }
 
     void addPressureLevelAndCount_data() {
-        QTest::addColumn<int>("levels");
-        QTest::addColumn<QIntList>("values");
+        QTest::addColumn<int>("pressureLevels");
+        QTest::addColumn<int>("windowSize");
+        QTest::addColumn<QIntList>("levels");
         QTest::addColumn<QIntPairList>("histogram");
 
-        QTest::newRow("") << 8192 * 8 << (QIntList() << 0 << 2) << (QIntPairList() << QIntPair{2, 1});
-        QTest::newRow("") << 8192 * 8
-                          << (QIntList() << 0 << 2 << 3 << 1 << 2)
-                          << (QIntPairList() << QIntPair{1, 1} << QIntPair{2, 2} << QIntPair{3, 1});
+        QTest::newRow("window: -1 | levels: 0, 2")
+                << 8192 * 8
+                << -1
+                << (QIntList() << 0 << 2)
+                << (QIntPairList() << QIntPair{2, 1});
+
+        QTest::newRow("window: -1 | levels: 0, 3, 2, 1, 2")
+                << 8192 * 8
+                << -1
+                << (QIntList() << 0 << 3 << 2 << 1 << 2)
+                << (QIntPairList() << QIntPair{1, 1} << QIntPair{2, 2} << QIntPair{3, 1});
+
+        QTest::newRow("window: 2 | levels: 0, 3, 2, 1, 2")
+                << 8192 * 8
+                << 2
+                << (QIntList() << 0 << 3 << 2 << 1 << 2)
+                << (QIntPairList() << QIntPair{1, 1} << QIntPair{2, 1});
+
+        QTest::newRow("window: 3 | levels: 0, 3, 2, 1, 2")
+                << 8192 * 8
+                << 3
+                << (QIntList() << 0 << 3 << 2 << 1 << 2)
+                << (QIntPairList() << QIntPair{1, 1} << QIntPair{2, 2});
+
+        QTest::newRow("window: 2 | levels: 0, 3, 2, 1, 2, 3, 3, 3")
+                << 8192 * 8
+                << 3
+                << (QIntList() << 0 << 3 << 2 << 1 << 2 << 3 << 3 << 3)
+                << (QIntPairList() << QIntPair{3, 3});
     }
 
     void addPressureLevelAndCount() {
-        QFETCH(int, levels);
-        QFETCH(QIntList, values);
+        QFETCH(int, pressureLevels);
+        QFETCH(int, windowSize);
+        QFETCH(QIntList, levels);
         QFETCH(QIntPairList, histogram);
 
         PenConfig config;
-        config.setPressureLevels(levels);
+        config.setPressureLevels(pressureLevels);
         PressureHistogramModel model(&config);
+        model.setWindowSize(windowSize);
 
-        const qreal delta = 1.0 / levels;
+        const qreal delta = 1.0 / pressureLevels;
 
-        for (int value: values) {
-            model.addPressure(value * delta);
+        for (int level: levels) {
+            model.addPressure(level * delta);
         }
 
-        QCOMPARE(model.size(), histogram.size());
+        QCOMPARE(model.histogramSize(), histogram.size());
 
-        for (int i = 0; i < model.size(); ++i) {
+        for (int i = 0; i < model.histogramSize(); ++i) {
             int level = histogram[i].first;
             int count = histogram[i].second;
-            qreal value = delta * level;
+            qreal value = level * delta;
 
-            QCOMPARE(model[i].value, value);
             QCOMPARE(model[i].level, level);
+            QCOMPARE(model[i].value, value);
             QCOMPARE(model[i].count, count);
         }
     }
