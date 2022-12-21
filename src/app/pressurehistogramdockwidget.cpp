@@ -40,6 +40,7 @@
 namespace {
 static const char* SettingsGroupKey { "PressureHistogramDock" };
 static const char* SplitterStateKey {"splitterState"};
+static const char* WindowSizeKey {"windowSize"};
 }
 
 PressureHistogramDockWidget::PressureHistogramDockWidget(PenConfig* penConfig, PenInfo *penInfo, QWidget *parent)
@@ -96,6 +97,22 @@ void PressureHistogramDockWidget::updateHistogram()
     series->attachAxis(m_yAxis);
 }
 
+void PressureHistogramDockWidget::setHistogramWindowSize(int windowSize)
+{
+    for (const auto& action: m_windowSizeActions) {
+        auto action_window_size = action->data().toInt();
+        if (action_window_size == windowSize) {
+            action->setChecked(true);
+            m_pressureHistogramModel->setWindowSize(windowSize);
+            return;
+        }
+    }
+
+    const auto& action = m_windowSizeActions.last();
+    action->setChecked(true);
+    m_pressureHistogramModel->setWindowSize(action->data().toInt());
+}
+
 void PressureHistogramDockWidget::updateTitle()
 {
     m_chart->setTitle(tr("<center><b>Pressure Histogram | %1</b><br>pressure levels: %2, detected levels: %3, in window: %4</center>")
@@ -122,6 +139,9 @@ void PressureHistogramDockWidget::saveSettings() const
     QSettings settings;
     settings.beginGroup(SettingsGroupKey);
     settings.setValue(SplitterStateKey, m_splitter->saveState());
+    if (m_pressureHistogramModel) {
+        settings.setValue(WindowSizeKey, m_pressureHistogramModel->windowSize());
+    }
     settings.endGroup();
 }
 
@@ -130,6 +150,7 @@ void PressureHistogramDockWidget::loadSettings()
     QSettings settings;
     settings.beginGroup(SettingsGroupKey);
     m_splitter->restoreState(settings.value(SplitterStateKey).toByteArray());
+    setHistogramWindowSize(settings.value(WindowSizeKey, -1).toInt());
     settings.endGroup();
 }
 
@@ -157,6 +178,7 @@ void PressureHistogramDockWidget::setupToolBarActions()
 
     for (int window_size: window_sizes) {
         action = new QAction(this);
+        action->setData(window_size);
         action->setText(window_size > 0 ? QString::number(window_size) : tr("All"));
         action->setCheckable(true);
         connect(action, &QAction::triggered, this, [this, window_size]() { m_pressureHistogramModel->setWindowSize(window_size); });
@@ -165,7 +187,7 @@ void PressureHistogramDockWidget::setupToolBarActions()
         addToolBarAction(action);
     }
 
-    m_windowSizeActions.last()->setChecked(true);
+    setHistogramWindowSize(-1);
 }
 
 void PressureHistogramDockWidget::setupWidgets()
