@@ -187,7 +187,7 @@ void PressureHistogramDockWidget::setupToolBarActions()
         addToolBarAction(action);
     }
 
-    setHistogramWindowSize(-1);
+    setHistogramWindowSize(20);
 }
 
 void PressureHistogramDockWidget::setupWidgets()
