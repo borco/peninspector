@@ -76,7 +76,7 @@ void PressureHistogramDockWidget::updateHistogram()
     std::memset(data, 0, sizeof data);
 
     for (int i = 0; i < m_pressureHistogramModel->histogramSize(); ++i) {
-        const auto pressure = (*m_pressureHistogramModel)[i];
+        const auto pressure = m_pressureHistogramModel->at(i);
         int index = pressure.value * levels;
         data[index] += pressure.count;
     }
@@ -130,18 +130,16 @@ void PressureHistogramDockWidget::copyChartToClipboard()
     clipboard->setMimeData(data);
 }
 
-void PressureHistogramDockWidget::saveChartToDisk()
-{
-}
+//void PressureHistogramDockWidget::saveChartToDisk()
+//{
+//}
 
 void PressureHistogramDockWidget::saveSettings() const
 {
     QSettings settings;
     settings.beginGroup(SettingsGroupKey);
     settings.setValue(SplitterStateKey, m_splitter->saveState());
-    if (m_pressureHistogramModel) {
-        settings.setValue(WindowSizeKey, m_pressureHistogramModel->windowSize());
-    }
+    settings.setValue(WindowSizeKey, m_pressureHistogramModel->windowSize());
     settings.endGroup();
 }
 
@@ -187,7 +185,7 @@ void PressureHistogramDockWidget::setupToolBarActions()
         addToolBarAction(action);
     }
 
-    setHistogramWindowSize(-1);
+    setHistogramWindowSize(window_sizes.last());
 }
 
 void PressureHistogramDockWidget::setupWidgets()

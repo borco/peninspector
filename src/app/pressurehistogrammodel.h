@@ -50,12 +50,13 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    const Pressure& operator[](int index) const { return m_histogram[index]; }
     int histogramSize() const { return m_histogram.size(); }
     int totalLevels() const { return m_totalLevels.size(); }
 
     int windowSize() const { return m_windowSize; }
     void setWindowSize(int newWindowSize);
+
+    const Pressure& at(int index) const { return m_histogram[index]; }
 
 signals:
     void histogramSizeChanged();
