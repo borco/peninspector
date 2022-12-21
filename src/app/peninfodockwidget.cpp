@@ -22,12 +22,16 @@
 
 #include "peninfo.h"
 
-PenInfoDockWidget::PenInfoDockWidget(PenInfo* penInfo, QWidget *parent)
+PenInfoDockWidget::PenInfoDockWidget(PenConfig* penConfig, PenInfo* penInfo, QWidget *parent)
     : DockWidget("penInfoDockWidget", tr("Pen Info"), parent)
     , m_ui(new Ui::PenInfoDockWidget)
+    , m_penConfig(penConfig)
     , m_penInfo(penInfo)
 {
     m_ui->setupUi(this);
+
+    m_ui->tiltPreview->setPenConfig(m_penConfig);
+    m_ui->tiltPreview->setPenInfo(m_penInfo);
 
     connect(m_penInfo, &PenInfo::deviceIdChanged, m_ui->deviceId, [this](int value){
         return m_ui->deviceId->setText(QString::number(value));

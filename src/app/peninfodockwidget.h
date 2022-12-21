@@ -25,6 +25,7 @@ namespace Ui {
 class PenInfoDockWidget;
 }
 
+class PenConfig;
 class PenInfo;
 
 class PenInfoDockWidget : public DockWidget
@@ -32,11 +33,12 @@ class PenInfoDockWidget : public DockWidget
     Q_OBJECT
 
 public:
-    explicit PenInfoDockWidget(PenInfo* penInfo, QWidget *parent = nullptr);
+    explicit PenInfoDockWidget(PenConfig* penConfig, PenInfo* penInfo, QWidget *parent = nullptr);
     ~PenInfoDockWidget();
 
 private:
     Ui::PenInfoDockWidget *m_ui {nullptr};
+    PenConfig* m_penConfig {nullptr};
     PenInfo* m_penInfo {nullptr};
 };
 
