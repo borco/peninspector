@@ -76,20 +76,12 @@ install(TARGETS ${APP_NAME}
 
 qt_finalize_executable(${APP_NAME})
 
-add_custom_target(${APP_NAME}_macdeployqt
+add_custom_target(${APP_NAME}_macos_installer
     DEPENDS ${APP_NAME}
-    COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.app"
-)
-
-add_custom_target(${APP_NAME}_windeployqt
-    DEPENDS ${APP_NAME}
-    COMMAND "${WINDEPLOYQT_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.exe"
-)
-
-add_custom_target(${APP_NAME}_create_dmg
-    DEPENDS ${APP_NAME}_macdeployqt
     COMMAND
-    ${CREATE_DMG_EXECUTABLE}
+    "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.app"
+    COMMAND
+    "${CREATE_DMG_EXECUTABLE}"
     --volname "${APP_NAME} Installer"
     --volicon "${APP_ICON_MACOS}"
     --window-pos 200 120
@@ -100,4 +92,27 @@ add_custom_target(${APP_NAME}_create_dmg
     --app-drop-link 600 190
     "${APP_NAME}-Installer.dmg"
     "${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.app"
+)
+
+set(APP_INSTALLER_CONFIG_DIR "${CMAKE_SOURCE_DIR}/config")
+set(APP_INSTALLER_PACKAGES_DIR "${CMAKE_BINARY_DIR}/packages/")
+set(APP_INSTALLER_PACKAGES_DATA_DIR "${APP_INSTALLER_PACKAGES_DIR}/borco.peninspector/data")
+set(APP_BINARY "${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.exe")
+
+add_custom_target(${APP_NAME}_windows_installer
+    DEPENDS ${APP_NAME}
+    COMMAND
+    ${CMAKE_COMMAND} -E remove -f "${APP_INSTALLER_PACKAGES_DIR}"
+    COMMAND
+    ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/packages" "${APP_INSTALLER_PACKAGES_DIR}"
+    COMMAND
+    ${CMAKE_COMMAND} -E copy "${APP_BINARY}" "${APP_INSTALLER_PACKAGES_DATA_DIR}"
+    COMMAND
+    "${WINDEPLOYQT_EXECUTABLE}" "${APP_BINARY}"
+    --dir "${APP_INSTALLER_PACKAGES_DATA_DIR}"
+    COMMAND
+    "${BINARYCREATOR_EXECUTABLE}"
+    --config "${APP_INSTALLER_CONFIG_DIR}/config.xml"
+    --packages "${APP_INSTALLER_PACKAGES_DIR}"
+    "${APP_NAME} Installer"
 )
