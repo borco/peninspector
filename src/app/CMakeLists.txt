@@ -114,5 +114,5 @@ add_custom_target(${APP_NAME}_windows_installer
     "${BINARYCREATOR_EXECUTABLE}"
     --config "${APP_INSTALLER_CONFIG_DIR}/config.xml"
     --packages "${APP_INSTALLER_PACKAGES_DIR}"
-    "${APP_NAME} Installer"
+    "${APP_NAME}-Installer"
 )
