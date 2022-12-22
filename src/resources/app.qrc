@@ -4,5 +4,6 @@
         <file>icons/dock-close.svg</file>
         <file>icons/config-add.svg</file>
         <file>icons/config-remove.svg</file>
+        <file>icons/peninspector.svg</file>
     </qresource>
 </RCC>

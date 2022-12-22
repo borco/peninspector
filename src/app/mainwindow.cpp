@@ -183,6 +183,7 @@ void MainWindow::setupWidgets()
 {
     setDockNestingEnabled(true);
     setWindowTitle(tr("PenInspector"));
+    setWindowIcon(QIcon(":/icons/peninspector.svg"));
 
     auto widget = new QWidget(this);
     widget->setMinimumSize(200, 200);
