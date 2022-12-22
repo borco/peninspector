@@ -81,6 +81,11 @@ add_custom_target(${APP_NAME}_macdeployqt
     COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.app"
 )
 
+add_custom_target(${APP_NAME}_windeployqt
+    DEPENDS ${APP_NAME}
+    COMMAND "${WINDEPLOYQT_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.exe"
+)
+
 add_custom_target(${APP_NAME}_create_dmg
     DEPENDS ${APP_NAME}_macdeployqt
     COMMAND

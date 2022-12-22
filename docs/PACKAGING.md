@@ -16,3 +16,12 @@ brew install create-dmg
 * select the *Build Steps* settings and click the *Details*
 * select the **PenInspector_mac_build_dmg** target
 * click the *Build* button or type the build shortcut
+
+## Windows
+
+### Configure QtCreator packaging build configuration
+
+* go to *Projects* and clone the *Release* build and name it *Packaging*, for example
+* select the *Build Steps* settings and click the *Details*
+* select the **PenInspector_windeployqt** target
+* click the *Build* button or type the build shortcut
